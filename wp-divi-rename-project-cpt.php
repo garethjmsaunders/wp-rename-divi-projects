@@ -1,7 +1,7 @@
 <?php
 /*
  * Plugin Name:         Rename Divi Projects
- * Version:             2.0.999.2
+ * Version:             2.0.999.4
  * Plugin URI:          https://digitalshed45.co.uk/rename-divi-projects-plugin/
  * Description:         Requires Divi by Elegant Themes. Rename the Divi 'Projects' post type to a user-defined name.
  * Author:              Digital Shed45 - Gareth J M Saunders
@@ -1326,8 +1326,15 @@ function divi_projects_cpt_rename_register_new_values() {
         'menu_icon'         => $menu_icon,
         'menu_position'     => 25,
         'public'            => true,
+        'publicly_queryable'=> true,
+        'exclude_from_search'=> false,
+        'show_ui'           => true,
+        'show_in_menu'      => true,
+        'show_in_rest'      => true,
+        'supports'          => array( 'title', 'editor', 'thumbnail', 'excerpt' ),
         'rewrite'           => [
         'slug'              => $slug,
+        'with_front'        => true,
         ],
     ] );
 
