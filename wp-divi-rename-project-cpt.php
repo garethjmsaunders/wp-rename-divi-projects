@@ -1,7 +1,7 @@
 <?php
 /*
  * Plugin Name:         Rename Divi Projects
- * Version:             1.0.10
+ * Version:             2.0.999.1
  * Plugin URI:          https://digitalshed45.co.uk/rename-divi-projects-plugin/
  * Description:         Requires Divi by Elegant Themes. Rename the Divi 'Projects' post type to a user-defined name.
  * Author:              Digital Shed45 - Gareth J M Saunders
@@ -57,6 +57,18 @@ function divi_projects_cpt_rename_check_divi_theme_on_activation() {
 }
 // Register the activation hook for the plugin.
 register_activation_hook( __FILE__, 'divi_projects_cpt_rename_check_divi_theme_on_activation' );
+
+/**
+ * Flush rewrite rules on plugin activation.
+ *
+ * This runs once on activation to prevent runtime rewrite flushing on every request.
+ *
+ * @return void
+ */
+function divi_projects_cpt_rename_flush_rewrite_rules_on_activation() {
+    flush_rewrite_rules();
+}
+register_activation_hook( __FILE__, 'divi_projects_cpt_rename_flush_rewrite_rules_on_activation' );
 
 
 /**
@@ -296,9 +308,21 @@ function divi_projects_cpt_rename_settings_init() {
      * @return void
      */
     function divi_projects_cpt_rename_flush_permalinks_after_settings_update($old_value, $new_value) {
-        
-        // Check if the settings values have changed to avoid unnecessary permalinks flush.
-        if ( $old_value !== $new_value ) {
+        $old_value = is_array( $old_value ) ? $old_value : array();
+        $new_value = is_array( $new_value ) ? $new_value : array();
+
+        $old_slug          = isset( $old_value['slug'] ) ? $old_value['slug'] : '';
+        $new_slug          = isset( $new_value['slug'] ) ? $new_value['slug'] : '';
+        $old_category_slug = isset( $old_value['category_slug'] ) ? $old_value['category_slug'] : '';
+        $new_category_slug = isset( $new_value['category_slug'] ) ? $new_value['category_slug'] : '';
+        $old_tag_slug      = isset( $old_value['tag_slug'] ) ? $old_value['tag_slug'] : '';
+        $new_tag_slug      = isset( $new_value['tag_slug'] ) ? $new_value['tag_slug'] : '';
+
+        if (
+            $old_slug !== $new_slug ||
+            $old_category_slug !== $new_category_slug ||
+            $old_tag_slug !== $new_tag_slug
+        ) {
             flush_rewrite_rules();
         }
     }
@@ -1418,26 +1442,6 @@ function divi_projects_cpt_rename_register_new_values() {
     }
 
 
-    /**
-     * Flush the WordPress rewrite (permalink) rules.
-     *
-     * This function clears the rewrite rules and rebuilds them based on the current
-     * configuration of custom post types, taxonomies, and other URL structures. It
-     * should be used after registering or modifying custom post types or taxonomies
-     * to ensure that new or updated rewrite rules are applied.
-     *
-     * This function is typically called after using functions such as
-     * `register_post_type()` and `register_taxonomy()` to ensure that the new
-     * URL structures are recognized by WordPress.
-     *
-     * Note: Frequent use of this function is not recommended as it can impact performance
-     * by forcing WordPress to regenerate its rewrite rules on every page load. It is
-     * usually called only once, immediately after the custom post type or taxonomy
-     * registration functions are called.
-     *
-     * @return void
-     */
-    flush_rewrite_rules();
 }
 // Register the `divi_projects_cpt_rename_register_new_values` function to the `init` action hook.
 add_action( 'init', 'divi_projects_cpt_rename_register_new_values' );
