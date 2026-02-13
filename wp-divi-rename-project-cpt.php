@@ -1,7 +1,7 @@
 <?php
 /*
  * Plugin Name:         Rename Divi Projects
- * Version:             2.0.999.1
+ * Version:             2.0.999.2
  * Plugin URI:          https://digitalshed45.co.uk/rename-divi-projects-plugin/
  * Description:         Requires Divi by Elegant Themes. Rename the Divi 'Projects' post type to a user-defined name.
  * Author:              Digital Shed45 - Gareth J M Saunders
@@ -293,56 +293,37 @@ function divi_projects_cpt_rename_settings_init() {
         'divi_projects_cpt_rename_tag_settings_section'
     );
 
-    // Hook into the settings update process to flush permalinks if settings are updated.
-    add_action( 'update_option_divi_projects_cpt_rename_settings', 'divi_projects_cpt_rename_flush_permalinks_after_settings_update', 10, 2 );
-
-
-    /**
-     * Flush rewrite rules when the settings are updated.
-     *
-     * This function ensures that permalink changes take effect by flushing
-     * rewrite rules when settings have been updated and the values have changed.
-     *
-     * @param mixed $old_value The old value of the settings.
-     * @param mixed $new_value The new value of the settings.
-     * @return void
-     */
-    function divi_projects_cpt_rename_flush_permalinks_after_settings_update($old_value, $new_value) {
-        $old_value = is_array( $old_value ) ? $old_value : array();
-        $new_value = is_array( $new_value ) ? $new_value : array();
-
-        $old_slug          = isset( $old_value['slug'] ) ? $old_value['slug'] : '';
-        $new_slug          = isset( $new_value['slug'] ) ? $new_value['slug'] : '';
-        $old_category_slug = isset( $old_value['category_slug'] ) ? $old_value['category_slug'] : '';
-        $new_category_slug = isset( $new_value['category_slug'] ) ? $new_value['category_slug'] : '';
-        $old_tag_slug      = isset( $old_value['tag_slug'] ) ? $old_value['tag_slug'] : '';
-        $new_tag_slug      = isset( $new_value['tag_slug'] ) ? $new_value['tag_slug'] : '';
-
-        if (
-            $old_slug !== $new_slug ||
-            $old_category_slug !== $new_category_slug ||
-            $old_tag_slug !== $new_tag_slug
-        ) {
-            flush_rewrite_rules();
-        }
-    }
-
-    
-    /**
-     * Initialize the plugin settings on admin initialization.
-     *
-     * Registers the settings group and settings fields used in the admin area.
-     *
-     * @return void
-     */
-    function divi_projects_cpt_rename_init() {
-        register_setting( 'divi_projects_cpt_rename_settings_group', 'divi_projects_cpt_rename_settings' );
-    }
-    // Hook the settings initialization function into the 'admin_init' action.
-    add_action( 'admin_init', 'divi_projects_cpt_rename_init' );
 }
 // Hook the settings initialization function into the 'admin_init' action.
 add_action( 'admin_init', 'divi_projects_cpt_rename_settings_init' );
+
+/**
+ * Flush rewrite rules when slug-related settings are updated.
+ *
+ * @param mixed $old_value The old value of the settings.
+ * @param mixed $new_value The new value of the settings.
+ * @return void
+ */
+function divi_projects_cpt_rename_flush_permalinks_after_settings_update( $old_value, $new_value ) {
+    $old_value = is_array( $old_value ) ? $old_value : array();
+    $new_value = is_array( $new_value ) ? $new_value : array();
+
+    $old_slug          = isset( $old_value['slug'] ) ? $old_value['slug'] : '';
+    $new_slug          = isset( $new_value['slug'] ) ? $new_value['slug'] : '';
+    $old_category_slug = isset( $old_value['category_slug'] ) ? $old_value['category_slug'] : '';
+    $new_category_slug = isset( $new_value['category_slug'] ) ? $new_value['category_slug'] : '';
+    $old_tag_slug      = isset( $old_value['tag_slug'] ) ? $old_value['tag_slug'] : '';
+    $new_tag_slug      = isset( $new_value['tag_slug'] ) ? $new_value['tag_slug'] : '';
+
+    if (
+        $old_slug !== $new_slug ||
+        $old_category_slug !== $new_category_slug ||
+        $old_tag_slug !== $new_tag_slug
+    ) {
+        flush_rewrite_rules();
+    }
+}
+add_action( 'update_option_divi_projects_cpt_rename_settings', 'divi_projects_cpt_rename_flush_permalinks_after_settings_update', 10, 2 );
 
 
 /**
@@ -1404,44 +1385,32 @@ function divi_projects_cpt_rename_register_new_values() {
         ],
     ] );
 
-    
-    /**
-    * Replace "Skills" with Tag Plural Name
-    * If the Divi Builder is not used for a "Project" post it displays the word "Skills"
-    * above the list of Project tags in the meta section above the post date.
-    * 
-    * This function filters the HTML output of the project meta section to replace the
-    * "Skills" heading with the custom Tag Plural Name set in the plugin options.
-    *
-    * @param string $content The HTML content of the project meta section.
-    * @return string The modified content with the updated tag plural name.
-    */
-    // Start output buffering before WordPress renders the page content
-    add_action( 'template_redirect', 'divi_projects_cpt_start_buffer' );
-
-    function divi_projects_cpt_start_buffer() {
-        // Start output buffering only on single project pages
-        if ( is_singular( 'project' ) ) {
-            ob_start( 'divi_projects_cpt_replace_skills_heading' );
-        }
-    }
-
-    // Function to replace the "Skills" label
-    function divi_projects_cpt_replace_skills_heading( $buffer ) {
-        // Get the custom plural tag name from your plugin settings
-        $custom_tag_plural_name = divi_projects_cpt_rename_get_tag_plural_name();
-
-        // The HTML string to search for (this is the default output for "Skills")
-        $default_skills_label = '<strong class="et_project_meta_title">Skills</strong>';
-
-        // Replace "Skills" with the custom plural tag name
-        $custom_label = '<strong class="et_project_meta_title">' . esc_html( $custom_tag_plural_name ) . '</strong>';
-
-        // Replace the default "Skills" label with the custom one
-        return str_replace( $default_skills_label, $custom_label, $buffer );
-    }
-
-
 }
 // Register the `divi_projects_cpt_rename_register_new_values` function to the `init` action hook.
 add_action( 'init', 'divi_projects_cpt_rename_register_new_values' );
+
+/**
+ * Start output buffering for single project pages.
+ *
+ * @return void
+ */
+function divi_projects_cpt_start_buffer() {
+    if ( is_singular( 'project' ) ) {
+        ob_start( 'divi_projects_cpt_replace_skills_heading' );
+    }
+}
+add_action( 'template_redirect', 'divi_projects_cpt_start_buffer' );
+
+/**
+ * Replace Divi's default "Skills" heading with the configured tag plural label.
+ *
+ * @param string $buffer The page output buffer.
+ * @return string
+ */
+function divi_projects_cpt_replace_skills_heading( $buffer ) {
+    $custom_tag_plural_name = divi_projects_cpt_rename_get_tag_plural_name();
+    $default_skills_label   = '<strong class="et_project_meta_title">Skills</strong>';
+    $custom_label           = '<strong class="et_project_meta_title">' . esc_html( $custom_tag_plural_name ) . '</strong>';
+
+    return str_replace( $default_skills_label, $custom_label, $buffer );
+}
