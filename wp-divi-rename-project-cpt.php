@@ -1357,6 +1357,7 @@ function divi_projects_cpt_rename_register_new_values() {
         ],
         'show_ui'               => true,
         'show_admin_column'     => true,
+        'public'                => true,
         'query_var'             => true,
         'show_in_rest'          => true,
         'rewrite'               => [
@@ -1367,7 +1368,7 @@ function divi_projects_cpt_rename_register_new_values() {
 
     // Register the taxonomy 'project_tag' for the 'project' post type
     register_taxonomy( 'project_tag', array('project'), [
-        'hierarchical' => true,
+        'hierarchical' => false,
         'labels'                => [
             'name'              => __( $tag_plural_name, 'wp-divi-rename-project-cpt' ),
             'singular_name'     => __( $tag_singular_name, 'wp-divi-rename-project-cpt' ),
@@ -1384,6 +1385,7 @@ function divi_projects_cpt_rename_register_new_values() {
         ],
         'show_ui'               => true,
         'show_admin_column'     => true,
+        'public'                => true,
         'query_var'             => true,
         'show_in_rest'          => true,
         'rewrite'               => [
