@@ -348,8 +348,8 @@ function divi_projects_cpt_rename_settings_init() {
     // Permissions Settings section
     add_settings_section(
         'divi_projects_cpt_rename_permissions_settings_section',
-        __( 'Permissions Settings', 'wp-divi-rename-project-cpt' ),
-        null,
+        __( 'Admin Menu Visibility', 'wp-divi-rename-project-cpt' ),
+        'divi_projects_cpt_rename_permissions_settings_section_render',
         'divi_projects_cpt_rename'
     );
 
@@ -1182,6 +1182,17 @@ function divi_projects_cpt_rename_permission_min_role_render() {
         <option value="editor" <?php selected( $selected_role, 'editor' ); ?>><?php esc_html_e( 'Editor', 'wp-divi-rename-project-cpt' ); ?></option>
         <option value="administrator" <?php selected( $selected_role, 'administrator' ); ?>><?php esc_html_e( 'Administrator', 'wp-divi-rename-project-cpt' ); ?></option>
     </select>
+    <?php
+}
+
+/**
+ * Permissions settings section description.
+ *
+ * @return void
+ */
+function divi_projects_cpt_rename_permissions_settings_section_render() {
+    ?>
+    <p class="description"><?php esc_html_e( 'Set the minimum user role that can see the renamed Projects custom post type in the WordPress admin menu. Users with lower roles will not see the Projects menu item. (Default setting is Contributor.', 'wp-divi-rename-project-cpt' ); ?></p>
     <?php
 }
 
