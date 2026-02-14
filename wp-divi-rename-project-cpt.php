@@ -1,7 +1,7 @@
 <?php
 /*
  * Plugin Name:         Rename Divi Projects
- * Version:             2.1.0
+ * Version:             2.2.0
  * Plugin URI:          https://digitalshed45.co.uk/rename-divi-projects-plugin/
  * Description:         Requires Divi by Elegant Themes. Rename the Divi 'Projects' post type to a user-defined name.
  * Author:              Digital Shed45 - Gareth J M Saunders
@@ -1192,7 +1192,11 @@ function divi_projects_cpt_rename_permission_min_role_render() {
  */
 function divi_projects_cpt_rename_permissions_settings_section_render() {
     ?>
-    <p class="description" style="font-size: 14px;"><?php esc_html_e( 'Set the minimum user role that can see the renamed Projects custom post type in the WordPress admin menu. Users with lower roles will not see the Projects menu item. (Default setting is Contributor.', 'wp-divi-rename-project-cpt' ); ?></p>
+    <p class="description" style="font-size: 14px;">
+        <?php esc_html_e( 'Set the minimum user role that can see the renamed Projects custom post type in the WordPress admin menu. Users with lower roles will not see the Projects menu item. Default setting is ', 'wp-divi-rename-project-cpt' ); ?>
+        <kbd><?php esc_html_e( 'Contributor', 'wp-divi-rename-project-cpt' ); ?></kbd>
+        <?php esc_html_e( '.', 'wp-divi-rename-project-cpt' ); ?>
+    </p>
     <?php
 }
 
