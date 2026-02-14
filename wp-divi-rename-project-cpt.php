@@ -1,7 +1,7 @@
 <?php
 /*
  * Plugin Name:         Rename Divi Projects
- * Version:             2.0.999.9
+ * Version:             2.0.0
  * Plugin URI:          https://digitalshed45.co.uk/rename-divi-projects-plugin/
  * Description:         Requires Divi by Elegant Themes. Rename the Divi 'Projects' post type to a user-defined name.
  * Author:              Digital Shed45 - Gareth J M Saunders
@@ -94,10 +94,10 @@ add_action( 'init', 'wpdocs_load_textdomain' );
 
 /**
  * CSS and JS
- * Enqueue custom CSS and JavaScript assets for the admin area.
+ * Enqueue custom CSS and JavaScript assets for the plugin settings page.
  *
  * This function enqueues the Dashicons library, a custom JavaScript file,
- * and a custom CSS file specifically for the admin area of WordPress.
+ * and a custom CSS file for this plugin's admin page only.
  *
  * @return void
  */
@@ -1140,9 +1140,10 @@ function divi_projects_cpt_rename_tag_slug_render() {
  * Options page
  * Render the options page for the "Rename Divi Projects" plugin.
  *
- * This function generates the settings page for the plugin under the "Settings" menu in the WordPress 
- * admin area. It checks if the current user has the capability to manage options (`manage_options`), 
- * and if not, it terminates execution with an error message.
+ * This function generates the settings page for the plugin in site admin. The menu entry is placed
+ * under Divi when available, with a fallback under Settings. It checks if the current user has the
+ * capability to manage options (`manage_options`), and if not, it terminates execution with an error
+ * message.
  *
  * The settings page includes:
  * - A header displaying the plugin title and version.
@@ -1164,8 +1165,8 @@ function divi_projects_cpt_rename_tag_slug_render() {
 function divi_projects_cpt_rename_options_page() {
     if ( ! current_user_can( 'manage_options' ) ) {
         // Check user capabilities
-        // User should not be able to access this plugin admin page as it is
-        // listed under Settings but this will double check.
+        // Users without manage_options should not access this admin page.
+        // This check is kept as a hard gate.
         // If the user doesn't have the capability, display an error message and exit.
         wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'wp-divi-rename-project-cpt' ) );
     }
@@ -1340,10 +1341,7 @@ function divi_projects_cpt_rename_get_tag_slug() {
  * It uses values obtained from settings options and then registers:
  * - A custom post type with updated labels, icon, and slug.
  * - A hierarchical taxonomy for categories with updated labels and slug.
- * - A hierarchical taxonomy for tags with updated labels and slug.
- *
- * After registering the post type and taxonomies, it flushes rewrite rules
- * to ensure that the changes are reflected immediately.
+ * - A non-hierarchical taxonomy for tags with updated labels and slug.
  *
  * @return void
  */
