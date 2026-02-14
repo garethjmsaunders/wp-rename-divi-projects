@@ -1,7 +1,7 @@
 <?php
 /*
  * Plugin Name:         Rename Divi Projects
- * Version:             2.0.0
+ * Version:             2.1.0
  * Plugin URI:          https://digitalshed45.co.uk/rename-divi-projects-plugin/
  * Description:         Requires Divi by Elegant Themes. Rename the Divi 'Projects' post type to a user-defined name.
  * Author:              Digital Shed45 - Gareth J M Saunders
@@ -345,6 +345,22 @@ function divi_projects_cpt_rename_settings_init() {
         'divi_projects_cpt_rename_tag_settings_section'
     );
 
+    // Permissions Settings section
+    add_settings_section(
+        'divi_projects_cpt_rename_permissions_settings_section',
+        __( 'Permissions Settings', 'wp-divi-rename-project-cpt' ),
+        null,
+        'divi_projects_cpt_rename'
+    );
+
+    add_settings_field(
+        'divi_projects_cpt_rename_permission_min_role',
+        __( 'Minimum role level', 'wp-divi-rename-project-cpt' ),
+        'divi_projects_cpt_rename_permission_min_role_render',
+        'divi_projects_cpt_rename',
+        'divi_projects_cpt_rename_permissions_settings_section'
+    );
+
 }
 // Hook the settings initialization function into the 'admin_init' action.
 add_action( 'admin_init', 'divi_projects_cpt_rename_settings_init' );
@@ -421,6 +437,8 @@ function divi_projects_cpt_rename_sanitize_settings( $settings ) {
     }
 
 
+    $settings = is_array( $settings ) ? $settings : array();
+
     // Initialize the array for sanitized settings
     $sanitized_settings = array();
 
@@ -481,11 +499,19 @@ function divi_projects_cpt_rename_sanitize_settings( $settings ) {
                 // Additional validation if needed
                 $sanitized_settings[ $key ] = esc_attr( $value );
                 break;
+            case 'permission_min_role':
+                $allowed_roles = array( 'contributor', 'author', 'editor', 'administrator' );
+                $sanitized_settings[ $key ] = in_array( $value, $allowed_roles, true ) ? $value : 'contributor';
+                break;
             default:
                 // Handle other settings as needed
                 $sanitized_settings[ $key ] = wp_kses_post( $value );
                 break;
         }
+    }
+
+    if ( empty( $sanitized_settings['permission_min_role'] ) ) {
+        $sanitized_settings['permission_min_role'] = 'contributor';
     }
 
     // Return the sanitized settings
@@ -1135,6 +1161,30 @@ function divi_projects_cpt_rename_tag_slug_render() {
     <?php
 }
 
+/**
+ * Minimum role level
+ * Render the dropdown for selecting the minimum role allowed to see Projects in the admin menu.
+ *
+ * @return void
+ */
+function divi_projects_cpt_rename_permission_min_role_render() {
+    $options       = get_option( 'divi_projects_cpt_rename_settings' );
+    $selected_role = isset( $options['permission_min_role'] ) ? $options['permission_min_role'] : 'contributor';
+    $allowed_roles = array( 'contributor', 'author', 'editor', 'administrator' );
+
+    if ( ! in_array( $selected_role, $allowed_roles, true ) ) {
+        $selected_role = 'contributor';
+    }
+    ?>
+    <select name="divi_projects_cpt_rename_settings[permission_min_role]">
+        <option value="contributor" <?php selected( $selected_role, 'contributor' ); ?>><?php esc_html_e( 'Contributor', 'wp-divi-rename-project-cpt' ); ?></option>
+        <option value="author" <?php selected( $selected_role, 'author' ); ?>><?php esc_html_e( 'Author', 'wp-divi-rename-project-cpt' ); ?></option>
+        <option value="editor" <?php selected( $selected_role, 'editor' ); ?>><?php esc_html_e( 'Editor', 'wp-divi-rename-project-cpt' ); ?></option>
+        <option value="administrator" <?php selected( $selected_role, 'administrator' ); ?>><?php esc_html_e( 'Administrator', 'wp-divi-rename-project-cpt' ); ?></option>
+    </select>
+    <?php
+}
+
 
 /**
  * Options page
@@ -1330,6 +1380,82 @@ function divi_projects_cpt_rename_get_tag_slug() {
     $options = get_option( 'divi_projects_cpt_rename_settings' );
     return isset( $options['tag_slug'] ) ? $options['tag_slug'] : 'project_tag';
 }
+
+/**
+ * Retrieve the minimum role level required to view the Projects admin menu.
+ *
+ * @return string
+ */
+function divi_projects_cpt_rename_get_permission_min_role() {
+    $options       = get_option( 'divi_projects_cpt_rename_settings' );
+    $selected_role = isset( $options['permission_min_role'] ) ? $options['permission_min_role'] : 'contributor';
+    $allowed_roles = array( 'contributor', 'author', 'editor', 'administrator' );
+
+    if ( ! in_array( $selected_role, $allowed_roles, true ) ) {
+        return 'contributor';
+    }
+
+    return $selected_role;
+}
+
+/**
+ * Get the highest role level for the current user.
+ *
+ * @param WP_User $user Current user object.
+ * @return int
+ */
+function divi_projects_cpt_rename_get_user_highest_role_level( $user ) {
+    $role_levels = array(
+        'contributor'   => 1,
+        'author'        => 2,
+        'editor'        => 3,
+        'administrator' => 4,
+    );
+    $highest_level = 0;
+
+    if ( ! ( $user instanceof WP_User ) ) {
+        return $highest_level;
+    }
+
+    foreach ( (array) $user->roles as $role ) {
+        if ( isset( $role_levels[ $role ] ) && $role_levels[ $role ] > $highest_level ) {
+            $highest_level = $role_levels[ $role ];
+        }
+    }
+
+    return $highest_level;
+}
+
+/**
+ * Hide the Projects CPT admin menu for users below the configured minimum role.
+ *
+ * @return void
+ */
+function divi_projects_cpt_rename_restrict_projects_menu_visibility() {
+    if ( ! is_admin() ) {
+        return;
+    }
+
+    if ( is_multisite() && is_super_admin() ) {
+        return;
+    }
+
+    $role_levels = array(
+        'contributor'   => 1,
+        'author'        => 2,
+        'editor'        => 3,
+        'administrator' => 4,
+    );
+    $minimum_role  = divi_projects_cpt_rename_get_permission_min_role();
+    $minimum_level = isset( $role_levels[ $minimum_role ] ) ? $role_levels[ $minimum_role ] : $role_levels['contributor'];
+    $user          = wp_get_current_user();
+    $user_level    = divi_projects_cpt_rename_get_user_highest_role_level( $user );
+
+    if ( $user_level < $minimum_level ) {
+        remove_menu_page( 'edit.php?post_type=project' );
+    }
+}
+add_action( 'admin_menu', 'divi_projects_cpt_rename_restrict_projects_menu_visibility', 999 );
 
 
 /**
