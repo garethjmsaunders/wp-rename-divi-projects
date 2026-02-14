@@ -9,7 +9,7 @@
  * Text domain:         wp-divi-rename-project-cpt
  * Domain Path:         /languages/
  * Requires at least:   5.3
- * Tested up to:        6.6.2
+ * Tested up to:        6.9.1
  * License:             GPL3
  * License URI:         https://www.gnu.org/licenses/gpl-3.0.html
  */
