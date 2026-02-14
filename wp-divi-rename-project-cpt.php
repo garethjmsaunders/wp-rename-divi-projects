@@ -1,7 +1,7 @@
 <?php
 /*
  * Plugin Name:         Rename Divi Projects
- * Version:             2.0.999.7
+ * Version:             2.0.999.8
  * Plugin URI:          https://digitalshed45.co.uk/rename-divi-projects-plugin/
  * Description:         Requires Divi by Elegant Themes. Rename the Divi 'Projects' post type to a user-defined name.
  * Author:              Digital Shed45 - Gareth J M Saunders
@@ -1314,13 +1314,13 @@ function divi_projects_cpt_rename_register_new_values() {
     // Register the custom post type 'project'
     register_post_type( 'project', [
         'labels'            => [
-            'name'          => __( $plural_name, 'wp-divi-rename-project-cpt' ),
-            'singular_name' => __( $singular_name, 'wp-divi-rename-project-cpt' ),
+            'name'          => $plural_name,
+            'singular_name' => $singular_name,
             'add_new'       => sprintf( __( 'Add New %s', 'wp-divi-rename-project-cpt' ), $singular_name ),
             'add_new_item'  => sprintf( __( 'Add New %s', 'wp-divi-rename-project-cpt' ), $singular_name ),
             'all_items'     => sprintf( __( 'All %s', 'wp-divi-rename-project-cpt' ), $plural_name ),
             'edit_item'     => sprintf( __( 'Edit %s', 'wp-divi-rename-project-cpt' ), $singular_name ),
-            'menu_name'     => __( $plural_name, 'wp-divi-rename-project-cpt' ),
+            'menu_name'     => $plural_name,
             'new_item'      => sprintf( __( 'New %s', 'wp-divi-rename-project-cpt' ), $singular_name ),
             'search_items'  => sprintf( __( 'Search %s', 'wp-divi-rename-project-cpt' ), $plural_name ),
             'view_item'     => sprintf( __( 'View %s', 'wp-divi-rename-project-cpt' ), $singular_name ),
@@ -1346,8 +1346,8 @@ function divi_projects_cpt_rename_register_new_values() {
     register_taxonomy( 'project_category', array( 'project' ), [
         'hierarchical' => true,
         'labels'                => [
-            'name'              => __( $category_plural_name, 'wp-divi-rename-project-cpt' ),
-            'singular_name'     => __( $category_singular_name, 'wp-divi-rename-project-cpt' ),
+            'name'              => $category_plural_name,
+            'singular_name'     => $category_singular_name,
             'search_items'      => sprintf( __( 'Search %s', 'wp-divi-rename-project-cpt' ), $category_plural_name ),
             'all_items'         => sprintf( __( 'All %s', 'wp-divi-rename-project-cpt' ), $category_plural_name ),
             'parent_item'       => sprintf( __( 'Parent %s', 'wp-divi-rename-project-cpt' ), $category_singular_name ),
@@ -1356,7 +1356,7 @@ function divi_projects_cpt_rename_register_new_values() {
             'update_item'       => sprintf( __( 'Update %s', 'wp-divi-rename-project-cpt' ), $category_singular_name ),
             'add_new_item'      => sprintf( __( 'Add New %s', 'wp-divi-rename-project-cpt' ), $category_singular_name ),
             'new_item_name'     => sprintf( __( 'New %s Name', 'wp-divi-rename-project-cpt' ), $category_singular_name ),
-            'menu_name'         => __( $category_plural_name, 'wp-divi-rename-project-cpt' ),
+            'menu_name'         => $category_plural_name,
             'not_found'         => sprintf( __( 'You currently don\'t have any %s.', 'wp-divi-rename-project-cpt' ), $category_plural_name ),
         ],
         'show_ui'               => true,
@@ -1374,8 +1374,8 @@ function divi_projects_cpt_rename_register_new_values() {
     register_taxonomy( 'project_tag', array('project'), [
         'hierarchical' => false,
         'labels'                => [
-            'name'              => __( $tag_plural_name, 'wp-divi-rename-project-cpt' ),
-            'singular_name'     => __( $tag_singular_name, 'wp-divi-rename-project-cpt' ),
+            'name'              => $tag_plural_name,
+            'singular_name'     => $tag_singular_name,
             'search_items'      => sprintf( __( 'Search %s', 'wp-divi-rename-project-cpt' ), $tag_plural_name ),
             'all_items'         => sprintf( __( 'All %s', 'wp-divi-rename-project-cpt' ), $tag_plural_name ),
             'parent_item'       => sprintf( __( 'Parent %s', 'wp-divi-rename-project-cpt' ), $tag_singular_name ),
@@ -1384,7 +1384,7 @@ function divi_projects_cpt_rename_register_new_values() {
             'update_item'       => sprintf( __( 'Update %s', 'wp-divi-rename-project-cpt' ), $tag_singular_name ),
             'add_new_item'      => sprintf( __( 'Add New %s', 'wp-divi-rename-project-cpt' ), $tag_singular_name ),
             'new_item_name'     => sprintf( __( 'New %s Name', 'wp-divi-rename-project-cpt' ), $tag_singular_name ),
-            'menu_name'         => __( $tag_plural_name, 'wp-divi-rename-project-cpt' ),
+            'menu_name'         => $tag_plural_name,
             'not_found'         => sprintf( __( 'You currently don\'t have any %s.', 'wp-divi-rename-project-cpt' ), $tag_plural_name ),
         ],
         'show_ui'               => true,
