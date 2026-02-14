@@ -1,239 +1,251 @@
 # Rename Divi Projects
 
-Unlock the full potential of Divi Projects to make your site truly unique!
+Unlock the full potential of Divi Projects to make your site truly unique. Compatible with both Divi 4 and Divi 5.
+
+<!-- MarkdownTOC -->
+
+- [About](#about)
+- [Customize the name](#customize-the-name)
+- [Features](#features)
+- [Documentation](#documentation)
+  - [How to install](#how-to-install)
+  - [Getting started with Rename Divi Projects](#getting-started-with-rename-divi-projects)
+  - [Settings page](#settings-page)
+  - [Deleting the plugin](#deleting-the-plugin)
+- [How it works](#how-it-works)
+- [Changelog](#changelog)
+
+<!-- /MarkdownTOC -->
 
 
-
-
+<a id="about"></a>
 ## About
 
-Rename Divi Projects is the perfect tool for customizing Divi’s default Projects post type to suit your unique needs. Completely transform the built-in Divi Projects into any type of content that fits your website.
+Rename Divi Projects customizes Divi's built-in `project` custom post type so you can use it for content that better matches your site (for example: properties, books, albums, case studies).
 
-Wouldn’t it be great to be able to change the project post type URL from 'project' to 'property' or 'book' or 'album' or anything you like, while keeping the functionality of the three Divi portfolio modules:
+You can rename labels and rewrite slugs while continuing to use Divi's project-related modules:
 
-* [Portfolio](https://www.elegantthemes.com/modules/portfolio/)
-* [Filterable Portfolio](https://www.elegantthemes.com/modules/filterable-portfolio/)
-* [Fullwidth Portfolio](https://www.elegantthemes.com/modules/portfolio-carousel/) (Carousel)
+- [Portfolio](https://www.elegantthemes.com/modules/portfolio/)
+- [Filterable Portfolio](https://www.elegantthemes.com/modules/filterable-portfolio/)
+- [Post Carousel ](https://www.elegantthemes.com/blog/theme-releases/flexbox) (Divi 5) or [Fullwidth Portfolio](https://www.elegantthemes.com/modules/portfolio-carousel/) (Divi 4)
 
-Rename Divi Projects allows you to do this quickly, simply and without any coding.
+<a id="customize-the-name"></a>
+## Customize the name
 
-### Customize the name
+Change the default "Projects" post type labels and slugs to fit your content model without replacing Divi's underlying project system.
 
-Change the default "Projects" post type to anything—properties, portfolios, books, or conferences—saving time and simplifying site management.
+<a id="features"></a>
+## Features
 
-### Features
+- **Rename labels** Change singular/plural labels for the Project post type, Project Category taxonomy, and Project Tag taxonomy.
+- **Change slugs** Customize rewrite slugs for project posts, project categories, and project tags.
+- **Choose a menu icon** Select a Dashicon for the Projects menu item.
+- **Control admin menu visibility** Set the minimum role level that can see the Projects menu in wp-admin.
+- **Divi single-project "Skills" label override** Replaces Divi's front-end "Skills" label with your configured tag plural label.
 
-* **Choose your menu icon** Select a custom icon to better represent your new post type in the WordPress admin menu.
-* **Modify slugs** Update the URL structure to reflect your new post type, keeping everything SEO-friendly.
-* **Category and Tag control** Rename and re-slug your categories and tags to match your new custom post type
-* **Why is this useful?** Perhaps your website showcases holiday letting properties, or advertises the books you have written, or you are in a band and want to display the albums you have released. It doesn’t make much sense semantically to list these as 'projects'.
-
-
-
-
+<a id="documentation"></a>
 ## Documentation
 
-
+<a id="how-to-install"></a>
 ### How to install
 
-WordPress plugins are PHP scripts that extend the functionality of WordPress.
+WordPress plugins are PHP scripts that extend WordPress functionality.
 
-This Divi extension is a WordPress plugin and may be installed like any other WordPress plugin.
+Rename Divi Projects is a standard WordPress plugin and can be installed like any other plugin.
 
 #### Option 1: Upload via WordPress Admin (recommended)
 
-You can manually upload the plugin zip file and install it through the WordPress Plugins admin screen.
-
-1. Download the Rename Divi Projects plugin zip file to your computer.
-2. Navigate to Plugins > Add New Plugin.
-3. Click the Upload Plugin button at the top of the screen.
-4. Select the zip file from your local filesystem.
-5. Click the Install now button.
-6. When the installation is complete, you’ll see "Plugin installed successfully." Click the 7. Activate Plugin button.
+1. Download the `Rename Divi Projects` plugin zip file
+2. Go to `Plugins > Add New Plugin`
+3. Select `Upload Plugin`
+4. Select the zip file
+5. Select `Install Now`
+6. Select `Activate Plugin` after installation completes
 
 #### Option 2: Manual plugin installation via SFTP
 
-You may prefer to install the plugin by manually transferring the files onto the server.
+1. Download the `Rename Divi Projects` plugin zip file
+2. Unzip it locally
+3. Upload the extracted plugin folder to `/wp-content/plugins/`
+4. In WordPress, go to `Plugins`
+5. Find `Rename Divi Projects` and select `Activate`
 
-This options requires you to be familiar with the process of transferring files using an SFTP client. It is recommended for advanced users and developers.
-
-1. Download the Rename Divi Projects plugin zip file to your computer.
-2. Unzip the folder to your computer.
-3. Transfer the extracted parent folder to the /wp-content/plugins/ directory of your WordPress site via SFTP or remote file manager.
-4. Return to WordPress and navigate to Plugins.
-5. Locate the Rename Divi Projects plugin and click Activate.
-
-
+<a id="getting-started-with-rename-divi-projects"></a>
 ### Getting started with Rename Divi Projects
 
-As the name suggests Rename Divi Projects allows you to customize the default Divi Projects custom post type.
+After activation, go to `Divi > Rename Divi Projects` to open the plugin settings page to configure:
 
-Why is this useful?
+1. Post type labels and slug
+2. Category labels and slug
+3. Tag labels and slug
+4. Menu icon
+5. Admin menu visibility minimum role
 
-Perhaps your website showcases holiday letting properties, or advertises the books you have written, or you are in a band and want to display the albums you have released. It doesn’t make much sense semantically to list these as ‘projects’.
+The plugin is designed for Divi's `project` ecosystem, so Divi project modules continue to work with your renamed labels and slugs (URLs).
 
-Wouldn’t it be great if you could change the project post type URL from ‘project’ to ‘property’ or ‘book’ or ‘album’ or anything you like, while keeping the functionality of the three Divi portfolio modules:
+<a id="settings-page"></a>
+### Settings page
 
-* [Filterable Portfolio](https://www.elegantthemes.com/modules/filterable-portfolio/)
-* [Portfolio](https://www.elegantthemes.com/modules/portfolio/)
-* [Portfolio Carousel](https://www.elegantthemes.com/modules/portfolio-carousel/)
+Location:
 
-The Rename Divi Projects plugin allows you to do this quickly, simply and without any coding.
+- Preferred: `Divi > Rename Divi Projects`
+- Fallback (if Divi parent menu is not found): `Settings > Rename Divi Projects`. Although, in truth, if Divi is not installed, the plugin installation will also fail gracefully.
 
+Access:
 
-#### Settings page
-
-Once installed, navigate to Settings > Rename Divi Projects to customize your Projects post type.
-
-
-#### Administrator only
-
-The Rename Divi Projects settings page is accessible only to users with an Administrator user role. This ensures that Editor, Author, Contributor, Viewer and Subscriber roles cannot change these settings.
-
+- Users must have the `manage_options` capability.
+- The settings page is added only in site admin (not in network admin).
 
 #### TL;DR
 
-1. Update the singular and plural name labels for the post type, categories and tags.
-2. Update the slugs (URLs).
-3. Select a menu icon (the drop-down has a search box).
-4. Click Save Changes.
-5. The settings will change immediately and permalinks will be automatically flushed.
-
+1. Update post type, category, and tag labels.
+2. Update slugs.
+3. Choose a menu icon.
+4. Set the minimum role for Projects menu visibility.
+5. Click Save Changes.
 
 #### Page layout
-The settings page is grouped into three blocks:
+
+The settings page is grouped into:
 
 1. Custom Post Type Settings
 2. Category Settings
 3. Tag Settings
+4. Admin Menu Visibility
 
-followed by a Save Changes button.
+Then a Save Changes button and a reset help section.
 
+#### Custom Post Type Settings
 
-#### Custom post type settings
+##### Singular Name
 
-The first block allows you to change the name of the custom post type labels, the slug (URL) and the menu icon from the default values to anything you wish.
+- Default: `Project`
+- Used in labels such as "Add New {Singular}" and edit screens.
 
-##### Singular name
+##### Plural Name
 
-Enter the singular name for your post type, e.g. Property, Book, Album, etc.
-
-* This text will display on the navigation menu for "Add New {singular name}" and on the edit page for adding a new post.
-* The default value is "Project".
-
-##### Plural name
-
-Enter the plural name for your post type, e.g. Properties, Books, Albums, etc.
-
-* This text will appear on the navigation menu replacing Projects. It will also appear on the "All {plural name}" sub menu item and posts admin page.
-* The default value is "Projects".
+- Default: `Projects`
+- Used in menu and list labels such as "All {Plural}".
 
 ##### Slug
 
-Enter the slug (URL) you want to use for your post type.
-
-* On save, the slug field will be ‘sanitized’ removing any illegal characters and spaces; all spaces will be repaced with a dash (-). Try to keep special characters to only a dash (-) or an underscore (_).
-* This text will replace ‘project’ as a the URL of your custom post type.
-* The default value is "project".
+- Default: `project`
+- Sanitized on save.
+- Used as the project rewrite slug.
 
 ##### Menu Icon
 
-Select the menu icon you wish to display in the WordPress navigation.
+- Default: `dashicons-portfolio`
+- Choose from a curated Dashicons list (with search-enabled dropdown).
 
-* All Dashicon options are available and previewed in the drop-down list. Use the search box at the top of the drop-down list to quickly find the icon you are looking for.
-* This icon will replace the menu icon on the WordPress left-hand navigation.
-* The default value is "Admin menu > post".
+#### Category Settings
 
+##### Category Singular Name
 
-#### Category settings
+- Default: `Project Category`
 
-The second block allows you to change the name of the Category labels and the category slug (URL) from the default values to anything you wish.
+##### Category Plural Name
 
-##### Singular name
+- Default: `Project Categories`
 
-Enter the singular name for your post type category, e..g Property category, or simply Category,
+##### Category Slug
 
-* This text will display on the post type categories page.
-* The default value is "Category".
+- Default: `project_category`
+- Sanitized on save.
+- Used as the `project_category` taxonomy rewrite slug.
 
-###### Plural name
-Enter the plual name for your post type categories, e..g Property categories, or simply Categories,
+#### Tag Settings
 
-* This text will appear on the navigation menu and the post type categories page.
-* The default value is "Categories".
+##### Tag Singular Name
 
-###### Slug
-Enter the slug (URL) you want to use for your post type categories archive page.
+- Default: `Project Tag`
 
-* On save, the slug field will be ‘sanitized’ removing any illegal characters and spaces; all spaces will be repaced with a dash (-). Try to keep special characters to only a dash (-) or an underscore (_).
-* This text will replace ‘project_category’ as a the URL of your custom post type categories archive.
-* The default value is "project_category".
+##### Tag Plural Name
 
+- Default: `Project Tags`
+- Also used for Divi's single-project front-end "Skills" label replacement.
 
-#### Tag settings
+##### Tag Slug
 
-The third block allows you to change the name of the Tag labels and the tag slug (URL) from the default values to anything you wish.
+- Default: `project_tag`
+- Sanitized on save.
+- Used as the `project_tag` taxonomy rewrite slug.
 
-##### Singular name
+#### Admin Menu Visibility
 
-Enter the singular name for your post type tag, e..g Property tag, or simply Tag,
+Set the minimum role level allowed to see the Projects admin menu item.
 
-* This text will display on the post type tag page.
-* The default value is "Tag".
+- Available levels: `Contributor`, `Author`, `Editor`, `Administrator`
+- Default: `Contributor`
+- Affects the `project` menu page in wp-admin (`edit.php?post_type=project`)
+- The rule hides the menu item for users below the selected level
 
-##### Plural name
+Important behavior:
 
-Enter the plual name for your post type tags, e..g Property tags, or simply Tags,
-
-* This text will appear on the navigation menu and the post type tags page.
-* This text also replaces the "Skills" pseudo-heading on non-Divi Builder post pages.
-* The default value is "Tags".
-
-##### Slug
-
-Enter the slug (URL) you want to use for your post type tags archive page.
-
-* On save, the slug field will be ‘sanitized’ removing any illegal characters and spaces; all spaces will be repaced with a dash (-). Try to keep special characters to only a dash (-) or an underscore (_).
-* This text will replace ‘project_tag’ as a the URL of your custom post type tag archive.
-* The default value is "project_tag".
-
+- This is menu visibility control, not a full capability/access control system.
+- It hides the menu item; it does not add explicit blocking for direct URL access.
+- On multisite, super admins are not restricted by this setting.
+- Custom roles outside the plugin's built-in role map are treated as level `0` in this logic.
 
 #### Save Changes
 
-Once you have made your edits, click the Save Changes button to update the "Projects" post type to your new settings.
+When you save:
 
-The changes should happen immediately. Anything that once had a URL of /project/ will now have your new custom post slug. Should this not happen, first go to Settings > Permalinks and click Save Changes there to flush the permalinks (slug) cache.
+- Settings are stored in the `divi_projects_cpt_rename_settings` option.
+- Slug fields are sanitized.
+- Rewrite rules are flushed automatically only when one or more slug values changed.
 
+Depending on what changed values you save, you may still need to manually flush the Permalinks. To do this go to `Settings > Permalinks` and simply select the `Save Changes` button.
 
+#### Reset to defaults
 
-### Reset to defaults
+To return to Divi defaults in runtime behavior:
 
-To reset the custom post type to the default Divi "Project" settings:
+1. Deactivate the plugin.
+2. Go to Settings > Permalinks and click Save Changes.
 
-1. Navigate to Plugins and deactivate the Rename Divi Projects post type plugin
-2. Navigate to Settings > Permalinks and click the Save Changes button to flush the rewrite rules cache.
+Your stored option values remain in the database until the plugin is uninstalled.
 
-Your custom post type values will be kept in the database until to reactive the plugin again.
+<a id="deleting-the-plugin"></a>
+### Deleting the plugin
 
-#### Deleting the plugin
+When you uninstall/delete the plugin from WordPress, it removes the stored option in the WordPress database:
 
-When you delete the plugin from the Plugins screen, all your custom post type settings for the Project post type will then be deleted from the database.
+- `divi_projects_cpt_rename_settings`
 
-
-
-
+<a id="how-it-works"></a>
 ## How it works
 
-**Rename Divi Projects** offers an easy-to-use interface that allows you to fully customize the default Divi "Projects" post type without needing to write any code. Once the plugin is installed and activated, it adds a new settings page where you can rename and rebrand the Projects post type to fit your needs. This includes changing the post type name, menu icon, URL slug, and the names and slugs for associated categories and tags.
+At a high level, the plugin re-registers Divi's existing project post type and its taxonomies with your configured labels/slugs.
 
-The plugin seamlessly integrates with the existing Divi ecosystem, allowing you to repurpose Projects into any type of custom content, such as properties, portfolios, or even events. Best of all, you can continue using Divi’s Projects modules to showcase and filter your new content type—no additional setup required.
+Key mechanics:
 
-**For developers**, the plugin works by dynamically registering the new values through WordPress’ register_post_type and register_taxonomy functions. It modifies the post type labels, slugs, and associated taxonomies, ensuring your changes are implemented site-wide. The plugin also automatically flushes WordPress rewrite rules, ensuring that any changes to your custom slugs are reflected immediately without manual intervention.
+- On `init`, it registers:
+    - post type key: `project`
+    - taxonomy keys: `project_category`, `project_tag`
+    - Settings values are pulled from one option: `divi_projects_cpt_rename_settings`.
+- On settings update, rewrite rules are flushed only if `slug`, `category_slug`, or `tag_slug` changed.
+- For UI placement, it adds the settings submenu under Divi when possible, otherwise under Settings.
+- For admin menu visibility, it removes the `project` menu page for users below the configured minimum role level.
+- For front-end single project pages, it replaces Divi's 'Skills' label with your configured tag plural:
+    - primary path: `gettext` filter for Divi domain strings
+    - fallback path: output-buffer string replacement for hard-coded template output
 
-Whether you’re a seasoned developer or a WordPress beginner, Rename Divi Projects takes care of the heavy lifting, allowing you to fully customize Divi Projects in just a few clicks.
+Divi 4 vs Divi 5 note:
 
+- The plugin does not hard-switch by explicit Divi version number.
+- The two-step 'Skills' replacement (gettext + output-buffer fallback) exists to handle differences in how Divi templates may output that label across versions/templates.
 
+Scope clarification:
+
+- The plugin changes labels and rewrite slugs for Divi's existing Project custom post type (CPT) entities.
+- It does not create a brand-new custom post type (CPT) key.
+- Internal keys remain `project`, `project_category`, and `project_tag`.
+
+<a id="changelog"></a>
 ## Changelog
 
-v1.0.10 | 2024-10-03 | FIX
-Ensure outputs go through escaping functions and sanitize input variable $_POST.
+- v2.2.0  | 2026-02-14 | FIX | Update translations. Other minor updates and tweaks to follow conventions.
+- v2.1.0  | 2026-02-14 | FEATURE | Add option to hide Projects (renamed or default) from certain user role levels.
+- v2.0.0  | 2026-02-14 | FIX | Optimise plugin to work with both Divi 4 and Divi 5.
+- v1.0.10 | 2024-10-03 | FIX | Ensure outputs go through escaping functions and sanitize input variable `$_POST`.
