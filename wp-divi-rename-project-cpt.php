@@ -1,7 +1,7 @@
 <?php
 /*
  * Plugin Name:         Rename Divi Projects
- * Version:             2.0.999.5
+ * Version:             2.0.999.6
  * Plugin URI:          https://digitalshed45.co.uk/rename-divi-projects-plugin/
  * Description:         Requires Divi by Elegant Themes. Rename the Divi 'Projects' post type to a user-defined name.
  * Author:              Digital Shed45 - Gareth J M Saunders
@@ -1399,19 +1399,49 @@ function divi_projects_cpt_rename_register_new_values() {
 add_action( 'init', 'divi_projects_cpt_rename_register_new_values' );
 
 /**
- * Start output buffering for single project pages.
+ * Enable front-end "Skills" label overrides for single project pages.
  *
  * @return void
  */
 function divi_projects_cpt_start_buffer() {
-    if ( is_singular( 'project' ) ) {
-        ob_start( 'divi_projects_cpt_replace_skills_heading' );
+    if ( is_admin() || wp_doing_ajax() ) {
+        return;
     }
+
+    if ( function_exists( 'wp_is_json_request' ) && wp_is_json_request() ) {
+        return;
+    }
+
+    if ( ! is_singular( 'project' ) ) {
+        return;
+    }
+
+    // Preferred approach: translate Divi's "Skills" string when it flows through gettext.
+    add_filter( 'gettext', 'divi_projects_cpt_replace_skills_gettext', 10, 3 );
+
+    // Compatibility fallback for templates that output hard-coded HTML.
+    ob_start( 'divi_projects_cpt_replace_skills_heading' );
 }
 add_action( 'template_redirect', 'divi_projects_cpt_start_buffer' );
 
 /**
- * Replace Divi's default "Skills" heading with the configured tag plural label.
+ * Replace Divi's "Skills" string via gettext when emitted from Divi text domain.
+ *
+ * @param string $translation Translated text.
+ * @param string $text Original source text.
+ * @param string $domain Text domain.
+ * @return string
+ */
+function divi_projects_cpt_replace_skills_gettext( $translation, $text, $domain ) {
+    if ( 'Divi' === $domain && 'Skills' === $text ) {
+        return divi_projects_cpt_rename_get_tag_plural_name();
+    }
+
+    return $translation;
+}
+
+/**
+ * Fallback: replace hard-coded Skills HTML heading with configured tag plural label.
  *
  * @param string $buffer The page output buffer.
  * @return string
