@@ -1,22 +1,21 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Rename Divi Projects\n"
-"POT-Creation-Date: 2024-09-15 14:25+0100\n"
-"PO-Revision-Date: 2024-09-15 14:25+0100\n"
+"POT-Creation-Date: 2026-02-14 16:43+0000\n"
+"PO-Revision-Date: 2026-02-14 16:46+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: it_IT\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 3.5\n"
+"X-Generator: Poedit 3.7\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-Flags-xgettext: --add-comments=translators:\n"
 "X-Poedit-WPHeader: wp-divi-rename-project-cpt.php\n"
 "X-Poedit-SourceCharset: UTF-8\n"
-"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
-"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;"
-"_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"X-Poedit-KeywordsList: "
+"__;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: *.min.js\n"
 
@@ -28,290 +27,333 @@ msgstr ""
 "Questo plugin richiede che il tema Divi di Elegant Themes sia attivo. Attiva "
 "il tema Divi e riprova."
 
-#: wp-divi-rename-project-cpt.php:119
+#: wp-divi-rename-project-cpt.php:52
+msgid "Plugin Activation Error"
+msgstr "Errore di attivazione del plugin"
+
+#: wp-divi-rename-project-cpt.php:151
 msgid "Rename Divi Projects Settings"
 msgstr "Rinomina le impostazioni dei progetti Divi"
 
 #. Plugin Name of the plugin/theme
-#: wp-divi-rename-project-cpt.php:120 wp-divi-rename-project-cpt.php:1120
+#: wp-divi-rename-project-cpt.php:152 wp-divi-rename-project-cpt.php:1242
 msgid "Rename Divi Projects"
 msgstr "Rinomina i progetti Divi"
 
-#: wp-divi-rename-project-cpt.php:144
+#: wp-divi-rename-project-cpt.php:207
 msgid "Settings"
 msgstr "Impostazioni"
 
-#: wp-divi-rename-project-cpt.php:183
+#: wp-divi-rename-project-cpt.php:246
 msgid "Custom Post Type Settings"
 msgstr "Impostazioni del tipo di post personalizzato"
 
-#: wp-divi-rename-project-cpt.php:191
+#: wp-divi-rename-project-cpt.php:254
 msgid "Singular Name"
 msgstr "Nome Singolo"
 
-#: wp-divi-rename-project-cpt.php:199
+#: wp-divi-rename-project-cpt.php:262
 msgid "Plural Name"
 msgstr "Nome Plurale"
 
-#: wp-divi-rename-project-cpt.php:207
+#: wp-divi-rename-project-cpt.php:270
 msgid "Slug"
 msgstr "Slug"
 
-#: wp-divi-rename-project-cpt.php:215
+#: wp-divi-rename-project-cpt.php:278
 msgid "Menu Icon"
 msgstr "Icona Menu"
 
-#: wp-divi-rename-project-cpt.php:224
+#: wp-divi-rename-project-cpt.php:287
 msgid "Category Settings"
 msgstr "Impostazioni Categoria"
 
-#: wp-divi-rename-project-cpt.php:231
+#: wp-divi-rename-project-cpt.php:294
 msgid "Category Singular Name"
 msgstr "Categoria Nome Singolare"
 
-#: wp-divi-rename-project-cpt.php:239
+#: wp-divi-rename-project-cpt.php:302
 msgid "Category Plural Name"
 msgstr "Categoria Plurale Nome"
 
-#: wp-divi-rename-project-cpt.php:247
+#: wp-divi-rename-project-cpt.php:310
 msgid "Category Slug"
 msgstr "Slug della Categoria"
 
-#: wp-divi-rename-project-cpt.php:256
+#: wp-divi-rename-project-cpt.php:319
 msgid "Tag Settings"
 msgstr "Impostazioni Tag"
 
-#: wp-divi-rename-project-cpt.php:263
+#: wp-divi-rename-project-cpt.php:326
 msgid "Tag Singular Name"
 msgstr "Tag Nome Singolare"
 
-#: wp-divi-rename-project-cpt.php:271
+#: wp-divi-rename-project-cpt.php:334
 msgid "Tag Plural Name"
 msgstr "Tag Plurale Nome"
 
-#: wp-divi-rename-project-cpt.php:279
+#: wp-divi-rename-project-cpt.php:342
 msgid "Tag Slug"
 msgstr "Tag Slug"
 
-#: wp-divi-rename-project-cpt.php:358 wp-divi-rename-project-cpt.php:1114
+#: wp-divi-rename-project-cpt.php:351
+msgid "Admin Menu Visibility"
+msgstr "Visibilità del menu di amministrazione"
+
+#: wp-divi-rename-project-cpt.php:358
+msgid "Minimum role level"
+msgstr "Livello minimo di ruolo"
+
+#: wp-divi-rename-project-cpt.php:430 wp-divi-rename-project-cpt.php:1236
 msgid "You do not have sufficient permissions to access this page."
 msgstr "Non hai i permessi necessari per accedere a questa pagina."
 
-#: wp-divi-rename-project-cpt.php:365
+#: wp-divi-rename-project-cpt.php:436
 msgid "Nonce verification failed."
 msgstr "La verifica nonce non è riuscita."
 
 #. translators: %s: field name
-#: wp-divi-rename-project-cpt.php:398
+#: wp-divi-rename-project-cpt.php:472
 #, php-format
 msgid "The %s field cannot be empty."
 msgstr "Il campo %s non può essere vuoto."
 
-#: wp-divi-rename-project-cpt.php:455 wp-divi-rename-project-cpt.php:476
-#: wp-divi-rename-project-cpt.php:500 wp-divi-rename-project-cpt.php:949
-#: wp-divi-rename-project-cpt.php:973 wp-divi-rename-project-cpt.php:998
-#: wp-divi-rename-project-cpt.php:1024 wp-divi-rename-project-cpt.php:1049
-#: wp-divi-rename-project-cpt.php:1073
+#: wp-divi-rename-project-cpt.php:537 wp-divi-rename-project-cpt.php:558
+#: wp-divi-rename-project-cpt.php:582 wp-divi-rename-project-cpt.php:1031
+#: wp-divi-rename-project-cpt.php:1055 wp-divi-rename-project-cpt.php:1080
+#: wp-divi-rename-project-cpt.php:1106 wp-divi-rename-project-cpt.php:1131
+#: wp-divi-rename-project-cpt.php:1155
 msgid "e.g."
 msgstr "ad es."
 
-#: wp-divi-rename-project-cpt.php:456
+#: wp-divi-rename-project-cpt.php:538
 msgid "Project"
 msgstr "Progetto"
 
-#: wp-divi-rename-project-cpt.php:477
+#: wp-divi-rename-project-cpt.php:559
 msgid "Projects"
 msgstr "Progetti"
 
-#: wp-divi-rename-project-cpt.php:501
+#: wp-divi-rename-project-cpt.php:583
 msgid "project"
 msgstr "progetto"
 
-#: wp-divi-rename-project-cpt.php:925
+#: wp-divi-rename-project-cpt.php:1007
 msgid "See"
 msgstr "Vedi"
 
-#: wp-divi-rename-project-cpt.php:925
+#: wp-divi-rename-project-cpt.php:1007
 msgid "Dashicons"
 msgstr "Dashicons"
 
-#: wp-divi-rename-project-cpt.php:926
+#: wp-divi-rename-project-cpt.php:1008
 msgid "(opens new window)"
 msgstr "(apre una nuova finestra)"
 
-#: wp-divi-rename-project-cpt.php:927
+#: wp-divi-rename-project-cpt.php:1009
 msgid "Divi's default menu icon is"
 msgstr "L'icona del menu predefinita di Divi è"
 
-#: wp-divi-rename-project-cpt.php:928
+#: wp-divi-rename-project-cpt.php:1010
 msgid "Admin Menu &gt; post"
 msgstr "Admin Menu &gt; post"
 
-#: wp-divi-rename-project-cpt.php:950
+#: wp-divi-rename-project-cpt.php:1032
 msgid "Project Category"
 msgstr "Categoria Progetto"
 
-#: wp-divi-rename-project-cpt.php:951 wp-divi-rename-project-cpt.php:975
-#: wp-divi-rename-project-cpt.php:1026 wp-divi-rename-project-cpt.php:1051
+#: wp-divi-rename-project-cpt.php:1033 wp-divi-rename-project-cpt.php:1057
+#: wp-divi-rename-project-cpt.php:1108 wp-divi-rename-project-cpt.php:1133
 msgid "or"
 msgstr "o"
 
-#: wp-divi-rename-project-cpt.php:952
+#: wp-divi-rename-project-cpt.php:1034
 msgid "Category"
 msgstr "Categoria"
 
-#: wp-divi-rename-project-cpt.php:974
+#: wp-divi-rename-project-cpt.php:1056
 msgid "Project Categories"
 msgstr "Categorie Progetto"
 
-#: wp-divi-rename-project-cpt.php:976
+#: wp-divi-rename-project-cpt.php:1058
 msgid "Categories"
 msgstr "Categorie"
 
-#: wp-divi-rename-project-cpt.php:999
+#: wp-divi-rename-project-cpt.php:1081
 msgid "project-category"
 msgstr "categoria-progetto"
 
-#: wp-divi-rename-project-cpt.php:1000
+#: wp-divi-rename-project-cpt.php:1082
 msgid "Divi's default category slug is"
 msgstr "Lo slug di categoria predefinito di Divi è"
 
-#: wp-divi-rename-project-cpt.php:1001
+#: wp-divi-rename-project-cpt.php:1083
 msgid "project_category"
 msgstr "project_category"
 
-#: wp-divi-rename-project-cpt.php:1002 wp-divi-rename-project-cpt.php:1077
+#: wp-divi-rename-project-cpt.php:1084 wp-divi-rename-project-cpt.php:1159
 msgid "with an underscore."
 msgstr "con un carattere di sottolineatura."
 
-#: wp-divi-rename-project-cpt.php:1025
+#: wp-divi-rename-project-cpt.php:1107
 msgid "Project Tag"
 msgstr "Tag Progetto"
 
-#: wp-divi-rename-project-cpt.php:1027
+#: wp-divi-rename-project-cpt.php:1109
 msgid "Tag"
 msgstr "Tag"
 
-#: wp-divi-rename-project-cpt.php:1050
+#: wp-divi-rename-project-cpt.php:1132
 msgid "Project Tags"
 msgstr "Tag Progetto"
 
-#: wp-divi-rename-project-cpt.php:1052
+#: wp-divi-rename-project-cpt.php:1134
 msgid "Tags"
 msgstr "Tags"
 
-#: wp-divi-rename-project-cpt.php:1074
+#: wp-divi-rename-project-cpt.php:1156
 msgid "project-tag"
 msgstr "tag-di-progetto"
 
-#: wp-divi-rename-project-cpt.php:1075
+#: wp-divi-rename-project-cpt.php:1157
 msgid "Divi's default tag slug is"
 msgstr "Il tag slug predefinito di Divi è"
 
-#: wp-divi-rename-project-cpt.php:1076
+#: wp-divi-rename-project-cpt.php:1158
 msgid "project_tag"
 msgstr "project_tag"
 
-#: wp-divi-rename-project-cpt.php:1129
-msgid "Reset to defaults"
-msgstr "Ripristinare le impostazioni predefinite"
+#: wp-divi-rename-project-cpt.php:1180 wp-divi-rename-project-cpt.php:1197
+msgid "Contributor"
+msgstr "Collaboratore"
 
-#: wp-divi-rename-project-cpt.php:1130
+#: wp-divi-rename-project-cpt.php:1181
+msgid "Author"
+msgstr "Autore"
+
+#: wp-divi-rename-project-cpt.php:1182
+msgid "Editor"
+msgstr "Editore"
+
+#: wp-divi-rename-project-cpt.php:1183
+msgid "Administrator"
+msgstr "Amministratore"
+
+#: wp-divi-rename-project-cpt.php:1196
+msgid ""
+"Set the minimum user role that can see the renamed Projects custom post type "
+"in the WordPress admin menu. Users with lower roles will not see the "
+"Projects menu item. Default setting is "
+msgstr ""
+"Imposta il ruolo utente minimo che può visualizzare il tipo di post "
+"personalizzato \"Progetti\" rinominato nel menu di amministrazione di "
+"WordPress. Gli utenti con ruoli inferiori non vedranno la voce di menu "
+"\"Progetti\". L'impostazione predefinita è "
+
+#: wp-divi-rename-project-cpt.php:1198
+msgid "."
+msgstr "."
+
+#: wp-divi-rename-project-cpt.php:1251
+msgid "How to Reset to Default Values"
+msgstr "Come ripristinare i valori predefiniti"
+
+#: wp-divi-rename-project-cpt.php:1252
 msgid "To"
 msgstr "Per"
 
-#: wp-divi-rename-project-cpt.php:1130
+#: wp-divi-rename-project-cpt.php:1252
 msgid "reset"
 msgstr "ripristinare"
 
-#: wp-divi-rename-project-cpt.php:1130
+#: wp-divi-rename-project-cpt.php:1252
 msgid ""
 "this custom post type to the default Divi Project settings (1) navigate to"
 msgstr ""
 "questo tipo di post personalizzato alle impostazioni predefinite del "
 "progetto Divi (1) vai a"
 
-#: wp-divi-rename-project-cpt.php:1130
+#: wp-divi-rename-project-cpt.php:1252
 msgid "Plugins"
 msgstr "Plugins"
 
-#: wp-divi-rename-project-cpt.php:1130
+#: wp-divi-rename-project-cpt.php:1252
 msgid "and deactivate the"
 msgstr "e disattivare il"
 
-#: wp-divi-rename-project-cpt.php:1130
+#: wp-divi-rename-project-cpt.php:1252
 msgid "Rename Divi Projects post type"
 msgstr "Rinomina il tipo di post dei progetti Divi"
 
-#: wp-divi-rename-project-cpt.php:1130
+#: wp-divi-rename-project-cpt.php:1252
 msgid "plugin then (2) go to"
 msgstr "plugin poi (2) vai su"
 
-#: wp-divi-rename-project-cpt.php:1130
+#: wp-divi-rename-project-cpt.php:1252
 msgid "Settings &gt; Permalinks"
 msgstr "Impostazioni &gt; Permalink"
 
-#: wp-divi-rename-project-cpt.php:1130
+#: wp-divi-rename-project-cpt.php:1252
 msgid "and click the Save Changes button to flush the rewrite rules cache."
 msgstr ""
 "e fare clic sul pulsante Salva modifiche per svuotare la cache delle regole "
 "di riscrittura."
 
-#: wp-divi-rename-project-cpt.php:1311 wp-divi-rename-project-cpt.php:1312
-#: wp-divi-rename-project-cpt.php:1342 wp-divi-rename-project-cpt.php:1369
+#: wp-divi-rename-project-cpt.php:1506 wp-divi-rename-project-cpt.php:1507
+#: wp-divi-rename-project-cpt.php:1544 wp-divi-rename-project-cpt.php:1572
 #, php-format
 msgid "Add New %s"
 msgstr "Aggiungi Nuovo %s"
 
-#: wp-divi-rename-project-cpt.php:1313 wp-divi-rename-project-cpt.php:1337
-#: wp-divi-rename-project-cpt.php:1364
+#: wp-divi-rename-project-cpt.php:1508 wp-divi-rename-project-cpt.php:1539
+#: wp-divi-rename-project-cpt.php:1567
 #, php-format
 msgid "All %s"
 msgstr "Tutti %s"
 
-#: wp-divi-rename-project-cpt.php:1314 wp-divi-rename-project-cpt.php:1340
-#: wp-divi-rename-project-cpt.php:1367
+#: wp-divi-rename-project-cpt.php:1509 wp-divi-rename-project-cpt.php:1542
+#: wp-divi-rename-project-cpt.php:1570
 #, php-format
 msgid "Edit %s"
 msgstr "Modifica %s"
 
-#: wp-divi-rename-project-cpt.php:1316
+#: wp-divi-rename-project-cpt.php:1511
 #, php-format
 msgid "New %s"
 msgstr "Nuovo %s"
 
-#: wp-divi-rename-project-cpt.php:1317 wp-divi-rename-project-cpt.php:1336
-#: wp-divi-rename-project-cpt.php:1363
+#: wp-divi-rename-project-cpt.php:1512 wp-divi-rename-project-cpt.php:1538
+#: wp-divi-rename-project-cpt.php:1566
 #, php-format
 msgid "Search %s"
 msgstr "Cerca %s"
 
-#: wp-divi-rename-project-cpt.php:1318
+#: wp-divi-rename-project-cpt.php:1513
 #, php-format
 msgid "View %s"
 msgstr "Visualizza %s"
 
-#: wp-divi-rename-project-cpt.php:1338 wp-divi-rename-project-cpt.php:1365
+#: wp-divi-rename-project-cpt.php:1540 wp-divi-rename-project-cpt.php:1568
 #, php-format
 msgid "Parent %s"
 msgstr "Genitore %s"
 
-#: wp-divi-rename-project-cpt.php:1339 wp-divi-rename-project-cpt.php:1366
+#: wp-divi-rename-project-cpt.php:1541 wp-divi-rename-project-cpt.php:1569
 #, php-format
 msgid "Parent %s:"
 msgstr "Genitore %s:"
 
-#: wp-divi-rename-project-cpt.php:1341 wp-divi-rename-project-cpt.php:1368
+#: wp-divi-rename-project-cpt.php:1543 wp-divi-rename-project-cpt.php:1571
 #, php-format
 msgid "Update %s"
 msgstr "Aggiorna %s"
 
-#: wp-divi-rename-project-cpt.php:1343 wp-divi-rename-project-cpt.php:1370
+#: wp-divi-rename-project-cpt.php:1545 wp-divi-rename-project-cpt.php:1573
 #, php-format
 msgid "New %s Name"
 msgstr "Nuovo %s Nome"
 
-#: wp-divi-rename-project-cpt.php:1345 wp-divi-rename-project-cpt.php:1372
+#: wp-divi-rename-project-cpt.php:1547 wp-divi-rename-project-cpt.php:1575
 #, php-format
 msgid "You currently don't have any %s."
 msgstr "Al momento non hai alcun %s."

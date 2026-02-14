@@ -1,7 +1,7 @@
 <?php
 /*
  * Plugin Name:         Rename Divi Projects
- * Version:             1.0.10
+ * Version:             2.2.0
  * Plugin URI:          https://digitalshed45.co.uk/rename-divi-projects-plugin/
  * Description:         Requires Divi by Elegant Themes. Rename the Divi 'Projects' post type to a user-defined name.
  * Author:              Digital Shed45 - Gareth J M Saunders
@@ -58,6 +58,18 @@ function divi_projects_cpt_rename_check_divi_theme_on_activation() {
 // Register the activation hook for the plugin.
 register_activation_hook( __FILE__, 'divi_projects_cpt_rename_check_divi_theme_on_activation' );
 
+/**
+ * Flush rewrite rules on plugin activation.
+ *
+ * This runs once on activation to prevent runtime rewrite flushing on every request.
+ *
+ * @return void
+ */
+function divi_projects_cpt_rename_flush_rewrite_rules_on_activation() {
+    flush_rewrite_rules();
+}
+register_activation_hook( __FILE__, 'divi_projects_cpt_rename_flush_rewrite_rules_on_activation' );
+
 
 /**
  * Text domain
@@ -82,14 +94,23 @@ add_action( 'init', 'wpdocs_load_textdomain' );
 
 /**
  * CSS and JS
- * Enqueue custom CSS and JavaScript assets for the admin area.
+ * Enqueue custom CSS and JavaScript assets for the plugin settings page.
  *
  * This function enqueues the Dashicons library, a custom JavaScript file,
- * and a custom CSS file specifically for the admin area of WordPress.
+ * and a custom CSS file for this plugin's admin page only.
  *
  * @return void
  */
-function divi_projects_cpt_rename_enqueue_custom_admin_assets() {
+function divi_projects_cpt_rename_enqueue_custom_admin_assets( $hook_suffix ) {
+
+    $plugin_page_suffix = '_page_rename-divi-projects-settings';
+
+    if (
+        'settings_page_rename-divi-projects-settings' !== $hook_suffix &&
+        substr( $hook_suffix, -strlen( $plugin_page_suffix ) ) !== $plugin_page_suffix
+    ) {
+        return;
+    }
 
     // Enqueue the Dashicons library for use in the admin area.
     wp_enqueue_style( 'dashicons' );
@@ -106,25 +127,68 @@ add_action( 'admin_enqueue_scripts', 'divi_projects_cpt_rename_enqueue_custom_ad
 
 /**
  * Admin settings menu item
- * Add a submenu item to the WordPress admin settings menu for plugin settings.
+ * Add a submenu item for plugin settings in site admin.
  *
- * This function creates an admin menu item under the "Settings" menu in the WordPress
- * admin area, allowing users to access the Rename Divi Projects settings page.
+ * Prefers placing the submenu under Divi when available. Falls back to
+ * the Settings menu if a Divi parent slug is not present.
  *
  * @return void
  */
 function divi_projects_cpt_rename_add_admin_menu() {
-    add_options_page(
+    // Keep settings in site admin only; options are site-specific.
+    if ( is_network_admin() ) {
+        return;
+    }
+
+    $parent_slug = divi_projects_cpt_rename_get_divi_parent_menu_slug();
+
+    if ( empty( $parent_slug ) ) {
+        $parent_slug = 'options-general.php';
+    }
+
+    add_submenu_page(
+        $parent_slug,                           // $parent_slug (string)
         __( 'Rename Divi Projects Settings', 'wp-divi-rename-project-cpt' ),   // $page_title (string)
         __( 'Rename Divi Projects', 'wp-divi-rename-project-cpt' ),            // $menu_title (string)
         'manage_options',                        // $capability (string)
         'rename-divi-projects-settings',         // $menu_slug (string)
-        'divi_projects_cpt_rename_options_page', // $callback_function (callable)
-        null                                     // $position (int|float)
+        'divi_projects_cpt_rename_options_page'  // $callback_function (callable)
     );
 }
-// Hook the function to the 'admin_menu' action to register the submenu item.
-add_action( 'admin_menu', 'divi_projects_cpt_rename_add_admin_menu' );
+// Hook late so Divi has registered its menu first.
+add_action( 'admin_menu', 'divi_projects_cpt_rename_add_admin_menu', 99 );
+
+/**
+ * Get the Divi top-level parent menu slug when available.
+ *
+ * @return string Menu slug or empty string if not found.
+ */
+function divi_projects_cpt_rename_get_divi_parent_menu_slug() {
+    global $menu;
+
+    if ( ! is_array( $menu ) ) {
+        return '';
+    }
+
+    // Known Divi parent slug first, then title-based fallback.
+    foreach ( $menu as $item ) {
+        if ( isset( $item[2] ) && 'et_divi_options' === $item[2] ) {
+            return $item[2];
+        }
+    }
+
+    foreach ( $menu as $item ) {
+        if ( ! isset( $item[0], $item[2] ) ) {
+            continue;
+        }
+
+        if ( false !== stripos( wp_strip_all_tags( $item[0] ), 'Divi' ) ) {
+            return $item[2];
+        }
+    }
+
+    return '';
+}
 
 
 /**
@@ -281,44 +345,53 @@ function divi_projects_cpt_rename_settings_init() {
         'divi_projects_cpt_rename_tag_settings_section'
     );
 
-    // Hook into the settings update process to flush permalinks if settings are updated.
-    add_action( 'update_option_divi_projects_cpt_rename_settings', 'divi_projects_cpt_rename_flush_permalinks_after_settings_update', 10, 2 );
+    // Permissions Settings section
+    add_settings_section(
+        'divi_projects_cpt_rename_permissions_settings_section',
+        __( 'Admin Menu Visibility', 'wp-divi-rename-project-cpt' ),
+        'divi_projects_cpt_rename_permissions_settings_section_render',
+        'divi_projects_cpt_rename'
+    );
 
+    add_settings_field(
+        'divi_projects_cpt_rename_permission_min_role',
+        __( 'Minimum role level', 'wp-divi-rename-project-cpt' ),
+        'divi_projects_cpt_rename_permission_min_role_render',
+        'divi_projects_cpt_rename',
+        'divi_projects_cpt_rename_permissions_settings_section'
+    );
 
-    /**
-     * Flush rewrite rules when the settings are updated.
-     *
-     * This function ensures that permalink changes take effect by flushing
-     * rewrite rules when settings have been updated and the values have changed.
-     *
-     * @param mixed $old_value The old value of the settings.
-     * @param mixed $new_value The new value of the settings.
-     * @return void
-     */
-    function divi_projects_cpt_rename_flush_permalinks_after_settings_update($old_value, $new_value) {
-        
-        // Check if the settings values have changed to avoid unnecessary permalinks flush.
-        if ( $old_value !== $new_value ) {
-            flush_rewrite_rules();
-        }
-    }
-
-    
-    /**
-     * Initialize the plugin settings on admin initialization.
-     *
-     * Registers the settings group and settings fields used in the admin area.
-     *
-     * @return void
-     */
-    function divi_projects_cpt_rename_init() {
-        register_setting( 'divi_projects_cpt_rename_settings_group', 'divi_projects_cpt_rename_settings' );
-    }
-    // Hook the settings initialization function into the 'admin_init' action.
-    add_action( 'admin_init', 'divi_projects_cpt_rename_init' );
 }
 // Hook the settings initialization function into the 'admin_init' action.
 add_action( 'admin_init', 'divi_projects_cpt_rename_settings_init' );
+
+/**
+ * Flush rewrite rules when slug-related settings are updated.
+ *
+ * @param mixed $old_value The old value of the settings.
+ * @param mixed $new_value The new value of the settings.
+ * @return void
+ */
+function divi_projects_cpt_rename_flush_permalinks_after_settings_update( $old_value, $new_value ) {
+    $old_value = is_array( $old_value ) ? $old_value : array();
+    $new_value = is_array( $new_value ) ? $new_value : array();
+
+    $old_slug          = isset( $old_value['slug'] ) ? $old_value['slug'] : '';
+    $new_slug          = isset( $new_value['slug'] ) ? $new_value['slug'] : '';
+    $old_category_slug = isset( $old_value['category_slug'] ) ? $old_value['category_slug'] : '';
+    $new_category_slug = isset( $new_value['category_slug'] ) ? $new_value['category_slug'] : '';
+    $old_tag_slug      = isset( $old_value['tag_slug'] ) ? $old_value['tag_slug'] : '';
+    $new_tag_slug      = isset( $new_value['tag_slug'] ) ? $new_value['tag_slug'] : '';
+
+    if (
+        $old_slug !== $new_slug ||
+        $old_category_slug !== $new_category_slug ||
+        $old_tag_slug !== $new_tag_slug
+    ) {
+        flush_rewrite_rules();
+    }
+}
+add_action( 'update_option_divi_projects_cpt_rename_settings', 'divi_projects_cpt_rename_flush_permalinks_after_settings_update', 10, 2 );
 
 
 /**
@@ -363,6 +436,8 @@ function divi_projects_cpt_rename_sanitize_settings( $settings ) {
         wp_die( esc_html__( 'Nonce verification failed.', 'wp-divi-rename-project-cpt' ) );
     }
 
+
+    $settings = is_array( $settings ) ? $settings : array();
 
     // Initialize the array for sanitized settings
     $sanitized_settings = array();
@@ -424,11 +499,19 @@ function divi_projects_cpt_rename_sanitize_settings( $settings ) {
                 // Additional validation if needed
                 $sanitized_settings[ $key ] = esc_attr( $value );
                 break;
+            case 'permission_min_role':
+                $allowed_roles = array( 'contributor', 'author', 'editor', 'administrator' );
+                $sanitized_settings[ $key ] = in_array( $value, $allowed_roles, true ) ? $value : 'contributor';
+                break;
             default:
                 // Handle other settings as needed
                 $sanitized_settings[ $key ] = wp_kses_post( $value );
                 break;
         }
+    }
+
+    if ( empty( $sanitized_settings['permission_min_role'] ) ) {
+        $sanitized_settings['permission_min_role'] = 'contributor';
     }
 
     // Return the sanitized settings
@@ -1078,14 +1161,54 @@ function divi_projects_cpt_rename_tag_slug_render() {
     <?php
 }
 
+/**
+ * Minimum role level
+ * Render the dropdown for selecting the minimum role allowed to see Projects in the admin menu.
+ *
+ * @return void
+ */
+function divi_projects_cpt_rename_permission_min_role_render() {
+    $options       = get_option( 'divi_projects_cpt_rename_settings' );
+    $selected_role = isset( $options['permission_min_role'] ) ? $options['permission_min_role'] : 'contributor';
+    $allowed_roles = array( 'contributor', 'author', 'editor', 'administrator' );
+
+    if ( ! in_array( $selected_role, $allowed_roles, true ) ) {
+        $selected_role = 'contributor';
+    }
+    ?>
+    <select name="divi_projects_cpt_rename_settings[permission_min_role]">
+        <option value="contributor" <?php selected( $selected_role, 'contributor' ); ?>><?php esc_html_e( 'Contributor', 'wp-divi-rename-project-cpt' ); ?></option>
+        <option value="author" <?php selected( $selected_role, 'author' ); ?>><?php esc_html_e( 'Author', 'wp-divi-rename-project-cpt' ); ?></option>
+        <option value="editor" <?php selected( $selected_role, 'editor' ); ?>><?php esc_html_e( 'Editor', 'wp-divi-rename-project-cpt' ); ?></option>
+        <option value="administrator" <?php selected( $selected_role, 'administrator' ); ?>><?php esc_html_e( 'Administrator', 'wp-divi-rename-project-cpt' ); ?></option>
+    </select>
+    <?php
+}
+
+/**
+ * Permissions settings section description.
+ *
+ * @return void
+ */
+function divi_projects_cpt_rename_permissions_settings_section_render() {
+    ?>
+    <p class="description" style="font-size: 14px;">
+        <?php esc_html_e( 'Set the minimum user role that can see the renamed Projects custom post type in the WordPress admin menu. Users with lower roles will not see the Projects menu item. Default setting is ', 'wp-divi-rename-project-cpt' ); ?>
+        <kbd><?php esc_html_e( 'Contributor', 'wp-divi-rename-project-cpt' ); ?></kbd>
+        <?php esc_html_e( '.', 'wp-divi-rename-project-cpt' ); ?>
+    </p>
+    <?php
+}
+
 
 /**
  * Options page
  * Render the options page for the "Rename Divi Projects" plugin.
  *
- * This function generates the settings page for the plugin under the "Settings" menu in the WordPress 
- * admin area. It checks if the current user has the capability to manage options (`manage_options`), 
- * and if not, it terminates execution with an error message.
+ * This function generates the settings page for the plugin in site admin. The menu entry is placed
+ * under Divi when available, with a fallback under Settings. It checks if the current user has the
+ * capability to manage options (`manage_options`), and if not, it terminates execution with an error
+ * message.
  *
  * The settings page includes:
  * - A header displaying the plugin title and version.
@@ -1107,8 +1230,8 @@ function divi_projects_cpt_rename_tag_slug_render() {
 function divi_projects_cpt_rename_options_page() {
     if ( ! current_user_can( 'manage_options' ) ) {
         // Check user capabilities
-        // User should not be able to access this plugin admin page as it is
-        // listed under Settings but this will double check.
+        // Users without manage_options should not access this admin page.
+        // This check is kept as a hard gate.
         // If the user doesn't have the capability, display an error message and exit.
         wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'wp-divi-rename-project-cpt' ) );
     }
@@ -1125,8 +1248,8 @@ function divi_projects_cpt_rename_options_page() {
             wp_nonce_field( 'divi_projects_cpt_rename_options_verify', 'divi_projects_cpt_rename_options_nonce' );
             submit_button();
         ?>
-        <h2><?php esc_html_e( 'Reset to defaults', 'wp-divi-rename-project-cpt' ); ?></h2>
-        <p class="reset"><?php esc_html_e( 'To', 'wp-divi-rename-project-cpt' ); ?> <strong><?php esc_html_e( 'reset', 'wp-divi-rename-project-cpt' ); ?></strong> <?php esc_html_e( 'this custom post type to the default Divi Project settings (1) navigate to', 'wp-divi-rename-project-cpt' ); ?> <a href="<?php echo esc_url( admin_url( 'plugins.php' ) ); ?>"><?php esc_html_e( 'Plugins', 'wp-divi-rename-project-cpt' ); ?></a> <?php esc_html_e( 'and deactivate the', 'wp-divi-rename-project-cpt' ); ?> <strong><?php esc_html_e( 'Rename Divi Projects post type', 'wp-divi-rename-project-cpt' ); ?></strong> <?php esc_html_e( 'plugin then (2) go to', 'wp-divi-rename-project-cpt' ); ?> <a href="options-permalink.php" target="_blank"><?php esc_html_e( 'Settings &gt; Permalinks', 'wp-divi-rename-project-cpt' ); ?></a> <?php esc_html_e( 'and click the Save Changes button to flush the rewrite rules cache.', 'wp-divi-rename-project-cpt' ); ?></p>
+        <h2><?php esc_html_e( 'How to Reset to Default Values', 'wp-divi-rename-project-cpt' ); ?></h2>
+        <p class="reset" style="font-size: 14px;"><?php esc_html_e( 'To', 'wp-divi-rename-project-cpt' ); ?> <strong><?php esc_html_e( 'reset', 'wp-divi-rename-project-cpt' ); ?></strong> <?php esc_html_e( 'this custom post type to the default Divi Project settings (1) navigate to', 'wp-divi-rename-project-cpt' ); ?> <a href="<?php echo esc_url( admin_url( 'plugins.php' ) ); ?>"><?php esc_html_e( 'Plugins', 'wp-divi-rename-project-cpt' ); ?></a> <?php esc_html_e( 'and deactivate the', 'wp-divi-rename-project-cpt' ); ?> <strong><?php esc_html_e( 'Rename Divi Projects post type', 'wp-divi-rename-project-cpt' ); ?></strong> <?php esc_html_e( 'plugin then (2) go to', 'wp-divi-rename-project-cpt' ); ?> <a href="options-permalink.php" target="_blank"><?php esc_html_e( 'Settings &gt; Permalinks', 'wp-divi-rename-project-cpt' ); ?></a> <?php esc_html_e( 'and click the Save Changes button to flush the rewrite rules cache.', 'wp-divi-rename-project-cpt' ); ?></p>
     </form>
     <?php
 }
@@ -1273,6 +1396,82 @@ function divi_projects_cpt_rename_get_tag_slug() {
     return isset( $options['tag_slug'] ) ? $options['tag_slug'] : 'project_tag';
 }
 
+/**
+ * Retrieve the minimum role level required to view the Projects admin menu.
+ *
+ * @return string
+ */
+function divi_projects_cpt_rename_get_permission_min_role() {
+    $options       = get_option( 'divi_projects_cpt_rename_settings' );
+    $selected_role = isset( $options['permission_min_role'] ) ? $options['permission_min_role'] : 'contributor';
+    $allowed_roles = array( 'contributor', 'author', 'editor', 'administrator' );
+
+    if ( ! in_array( $selected_role, $allowed_roles, true ) ) {
+        return 'contributor';
+    }
+
+    return $selected_role;
+}
+
+/**
+ * Get the highest role level for the current user.
+ *
+ * @param WP_User $user Current user object.
+ * @return int
+ */
+function divi_projects_cpt_rename_get_user_highest_role_level( $user ) {
+    $role_levels = array(
+        'contributor'   => 1,
+        'author'        => 2,
+        'editor'        => 3,
+        'administrator' => 4,
+    );
+    $highest_level = 0;
+
+    if ( ! ( $user instanceof WP_User ) ) {
+        return $highest_level;
+    }
+
+    foreach ( (array) $user->roles as $role ) {
+        if ( isset( $role_levels[ $role ] ) && $role_levels[ $role ] > $highest_level ) {
+            $highest_level = $role_levels[ $role ];
+        }
+    }
+
+    return $highest_level;
+}
+
+/**
+ * Hide the Projects CPT admin menu for users below the configured minimum role.
+ *
+ * @return void
+ */
+function divi_projects_cpt_rename_restrict_projects_menu_visibility() {
+    if ( ! is_admin() ) {
+        return;
+    }
+
+    if ( is_multisite() && is_super_admin() ) {
+        return;
+    }
+
+    $role_levels = array(
+        'contributor'   => 1,
+        'author'        => 2,
+        'editor'        => 3,
+        'administrator' => 4,
+    );
+    $minimum_role  = divi_projects_cpt_rename_get_permission_min_role();
+    $minimum_level = isset( $role_levels[ $minimum_role ] ) ? $role_levels[ $minimum_role ] : $role_levels['contributor'];
+    $user          = wp_get_current_user();
+    $user_level    = divi_projects_cpt_rename_get_user_highest_role_level( $user );
+
+    if ( $user_level < $minimum_level ) {
+        remove_menu_page( 'edit.php?post_type=project' );
+    }
+}
+add_action( 'admin_menu', 'divi_projects_cpt_rename_restrict_projects_menu_visibility', 999 );
+
 
 /**
  * Change the Divi Projects custom post type
@@ -1283,10 +1482,7 @@ function divi_projects_cpt_rename_get_tag_slug() {
  * It uses values obtained from settings options and then registers:
  * - A custom post type with updated labels, icon, and slug.
  * - A hierarchical taxonomy for categories with updated labels and slug.
- * - A hierarchical taxonomy for tags with updated labels and slug.
- *
- * After registering the post type and taxonomies, it flushes rewrite rules
- * to ensure that the changes are reflected immediately.
+ * - A non-hierarchical taxonomy for tags with updated labels and slug.
  *
  * @return void
  */
@@ -1305,13 +1501,13 @@ function divi_projects_cpt_rename_register_new_values() {
     // Register the custom post type 'project'
     register_post_type( 'project', [
         'labels'            => [
-            'name'          => __( $plural_name, 'wp-divi-rename-project-cpt' ),
-            'singular_name' => __( $singular_name, 'wp-divi-rename-project-cpt' ),
+            'name'          => $plural_name,
+            'singular_name' => $singular_name,
             'add_new'       => sprintf( __( 'Add New %s', 'wp-divi-rename-project-cpt' ), $singular_name ),
             'add_new_item'  => sprintf( __( 'Add New %s', 'wp-divi-rename-project-cpt' ), $singular_name ),
             'all_items'     => sprintf( __( 'All %s', 'wp-divi-rename-project-cpt' ), $plural_name ),
             'edit_item'     => sprintf( __( 'Edit %s', 'wp-divi-rename-project-cpt' ), $singular_name ),
-            'menu_name'     => __( $plural_name, 'wp-divi-rename-project-cpt' ),
+            'menu_name'     => $plural_name,
             'new_item'      => sprintf( __( 'New %s', 'wp-divi-rename-project-cpt' ), $singular_name ),
             'search_items'  => sprintf( __( 'Search %s', 'wp-divi-rename-project-cpt' ), $plural_name ),
             'view_item'     => sprintf( __( 'View %s', 'wp-divi-rename-project-cpt' ), $singular_name ),
@@ -1321,8 +1517,15 @@ function divi_projects_cpt_rename_register_new_values() {
         'menu_icon'         => $menu_icon,
         'menu_position'     => 25,
         'public'            => true,
+        'publicly_queryable'=> true,
+        'exclude_from_search'=> false,
+        'show_ui'           => true,
+        'show_in_menu'      => true,
+        'show_in_rest'      => true,
+        'supports'          => array( 'title', 'editor', 'thumbnail', 'excerpt' ),
         'rewrite'           => [
         'slug'              => $slug,
+        'with_front'        => true,
         ],
     ] );
 
@@ -1330,8 +1533,8 @@ function divi_projects_cpt_rename_register_new_values() {
     register_taxonomy( 'project_category', array( 'project' ), [
         'hierarchical' => true,
         'labels'                => [
-            'name'              => __( $category_plural_name, 'wp-divi-rename-project-cpt' ),
-            'singular_name'     => __( $category_singular_name, 'wp-divi-rename-project-cpt' ),
+            'name'              => $category_plural_name,
+            'singular_name'     => $category_singular_name,
             'search_items'      => sprintf( __( 'Search %s', 'wp-divi-rename-project-cpt' ), $category_plural_name ),
             'all_items'         => sprintf( __( 'All %s', 'wp-divi-rename-project-cpt' ), $category_plural_name ),
             'parent_item'       => sprintf( __( 'Parent %s', 'wp-divi-rename-project-cpt' ), $category_singular_name ),
@@ -1340,11 +1543,12 @@ function divi_projects_cpt_rename_register_new_values() {
             'update_item'       => sprintf( __( 'Update %s', 'wp-divi-rename-project-cpt' ), $category_singular_name ),
             'add_new_item'      => sprintf( __( 'Add New %s', 'wp-divi-rename-project-cpt' ), $category_singular_name ),
             'new_item_name'     => sprintf( __( 'New %s Name', 'wp-divi-rename-project-cpt' ), $category_singular_name ),
-            'menu_name'         => __( $category_plural_name, 'wp-divi-rename-project-cpt' ),
+            'menu_name'         => $category_plural_name,
             'not_found'         => sprintf( __( 'You currently don\'t have any %s.', 'wp-divi-rename-project-cpt' ), $category_plural_name ),
         ],
         'show_ui'               => true,
         'show_admin_column'     => true,
+        'public'                => true,
         'query_var'             => true,
         'show_in_rest'          => true,
         'rewrite'               => [
@@ -1355,10 +1559,10 @@ function divi_projects_cpt_rename_register_new_values() {
 
     // Register the taxonomy 'project_tag' for the 'project' post type
     register_taxonomy( 'project_tag', array('project'), [
-        'hierarchical' => true,
+        'hierarchical' => false,
         'labels'                => [
-            'name'              => __( $tag_plural_name, 'wp-divi-rename-project-cpt' ),
-            'singular_name'     => __( $tag_singular_name, 'wp-divi-rename-project-cpt' ),
+            'name'              => $tag_plural_name,
+            'singular_name'     => $tag_singular_name,
             'search_items'      => sprintf( __( 'Search %s', 'wp-divi-rename-project-cpt' ), $tag_plural_name ),
             'all_items'         => sprintf( __( 'All %s', 'wp-divi-rename-project-cpt' ), $tag_plural_name ),
             'parent_item'       => sprintf( __( 'Parent %s', 'wp-divi-rename-project-cpt' ), $tag_singular_name ),
@@ -1367,11 +1571,12 @@ function divi_projects_cpt_rename_register_new_values() {
             'update_item'       => sprintf( __( 'Update %s', 'wp-divi-rename-project-cpt' ), $tag_singular_name ),
             'add_new_item'      => sprintf( __( 'Add New %s', 'wp-divi-rename-project-cpt' ), $tag_singular_name ),
             'new_item_name'     => sprintf( __( 'New %s Name', 'wp-divi-rename-project-cpt' ), $tag_singular_name ),
-            'menu_name'         => __( $tag_plural_name, 'wp-divi-rename-project-cpt' ),
+            'menu_name'         => $tag_plural_name,
             'not_found'         => sprintf( __( 'You currently don\'t have any %s.', 'wp-divi-rename-project-cpt' ), $tag_plural_name ),
         ],
         'show_ui'               => true,
         'show_admin_column'     => true,
+        'public'                => true,
         'query_var'             => true,
         'show_in_rest'          => true,
         'rewrite'               => [
@@ -1380,64 +1585,62 @@ function divi_projects_cpt_rename_register_new_values() {
         ],
     ] );
 
-    
-    /**
-    * Replace "Skills" with Tag Plural Name
-    * If the Divi Builder is not used for a "Project" post it displays the word "Skills"
-    * above the list of Project tags in the meta section above the post date.
-    * 
-    * This function filters the HTML output of the project meta section to replace the
-    * "Skills" heading with the custom Tag Plural Name set in the plugin options.
-    *
-    * @param string $content The HTML content of the project meta section.
-    * @return string The modified content with the updated tag plural name.
-    */
-    // Start output buffering before WordPress renders the page content
-    add_action( 'template_redirect', 'divi_projects_cpt_start_buffer' );
-
-    function divi_projects_cpt_start_buffer() {
-        // Start output buffering only on single project pages
-        if ( is_singular( 'project' ) ) {
-            ob_start( 'divi_projects_cpt_replace_skills_heading' );
-        }
-    }
-
-    // Function to replace the "Skills" label
-    function divi_projects_cpt_replace_skills_heading( $buffer ) {
-        // Get the custom plural tag name from your plugin settings
-        $custom_tag_plural_name = divi_projects_cpt_rename_get_tag_plural_name();
-
-        // The HTML string to search for (this is the default output for "Skills")
-        $default_skills_label = '<strong class="et_project_meta_title">Skills</strong>';
-
-        // Replace "Skills" with the custom plural tag name
-        $custom_label = '<strong class="et_project_meta_title">' . esc_html( $custom_tag_plural_name ) . '</strong>';
-
-        // Replace the default "Skills" label with the custom one
-        return str_replace( $default_skills_label, $custom_label, $buffer );
-    }
-
-
-    /**
-     * Flush the WordPress rewrite (permalink) rules.
-     *
-     * This function clears the rewrite rules and rebuilds them based on the current
-     * configuration of custom post types, taxonomies, and other URL structures. It
-     * should be used after registering or modifying custom post types or taxonomies
-     * to ensure that new or updated rewrite rules are applied.
-     *
-     * This function is typically called after using functions such as
-     * `register_post_type()` and `register_taxonomy()` to ensure that the new
-     * URL structures are recognized by WordPress.
-     *
-     * Note: Frequent use of this function is not recommended as it can impact performance
-     * by forcing WordPress to regenerate its rewrite rules on every page load. It is
-     * usually called only once, immediately after the custom post type or taxonomy
-     * registration functions are called.
-     *
-     * @return void
-     */
-    flush_rewrite_rules();
 }
 // Register the `divi_projects_cpt_rename_register_new_values` function to the `init` action hook.
 add_action( 'init', 'divi_projects_cpt_rename_register_new_values' );
+
+/**
+ * Enable front-end "Skills" label overrides for single project pages.
+ *
+ * @return void
+ */
+function divi_projects_cpt_start_buffer() {
+    if ( is_admin() || wp_doing_ajax() ) {
+        return;
+    }
+
+    if ( function_exists( 'wp_is_json_request' ) && wp_is_json_request() ) {
+        return;
+    }
+
+    if ( ! is_singular( 'project' ) ) {
+        return;
+    }
+
+    // Preferred approach: translate Divi's "Skills" string when it flows through gettext.
+    add_filter( 'gettext', 'divi_projects_cpt_replace_skills_gettext', 10, 3 );
+
+    // Compatibility fallback for templates that output hard-coded HTML.
+    ob_start( 'divi_projects_cpt_replace_skills_heading' );
+}
+add_action( 'template_redirect', 'divi_projects_cpt_start_buffer' );
+
+/**
+ * Replace Divi's "Skills" string via gettext when emitted from Divi text domain.
+ *
+ * @param string $translation Translated text.
+ * @param string $text Original source text.
+ * @param string $domain Text domain.
+ * @return string
+ */
+function divi_projects_cpt_replace_skills_gettext( $translation, $text, $domain ) {
+    if ( 'Divi' === $domain && 'Skills' === $text ) {
+        return divi_projects_cpt_rename_get_tag_plural_name();
+    }
+
+    return $translation;
+}
+
+/**
+ * Fallback: replace hard-coded Skills HTML heading with configured tag plural label.
+ *
+ * @param string $buffer The page output buffer.
+ * @return string
+ */
+function divi_projects_cpt_replace_skills_heading( $buffer ) {
+    $custom_tag_plural_name = divi_projects_cpt_rename_get_tag_plural_name();
+    $default_skills_label   = '<strong class="et_project_meta_title">Skills</strong>';
+    $custom_label           = '<strong class="et_project_meta_title">' . esc_html( $custom_tag_plural_name ) . '</strong>';
+
+    return str_replace( $default_skills_label, $custom_label, $buffer );
+}
