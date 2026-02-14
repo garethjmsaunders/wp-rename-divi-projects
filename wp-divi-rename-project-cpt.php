@@ -1192,7 +1192,7 @@ function divi_projects_cpt_rename_permission_min_role_render() {
  */
 function divi_projects_cpt_rename_permissions_settings_section_render() {
     ?>
-    <p class="description"><?php esc_html_e( 'Set the minimum user role that can see the renamed Projects custom post type in the WordPress admin menu. Users with lower roles will not see the Projects menu item. (Default setting is Contributor.', 'wp-divi-rename-project-cpt' ); ?></p>
+    <p class="description" style="font-size: 14px;"><?php esc_html_e( 'Set the minimum user role that can see the renamed Projects custom post type in the WordPress admin menu. Users with lower roles will not see the Projects menu item. (Default setting is Contributor.', 'wp-divi-rename-project-cpt' ); ?></p>
     <?php
 }
 
@@ -1244,8 +1244,8 @@ function divi_projects_cpt_rename_options_page() {
             wp_nonce_field( 'divi_projects_cpt_rename_options_verify', 'divi_projects_cpt_rename_options_nonce' );
             submit_button();
         ?>
-        <h2><?php esc_html_e( 'Reset to defaults', 'wp-divi-rename-project-cpt' ); ?></h2>
-        <p class="reset"><?php esc_html_e( 'To', 'wp-divi-rename-project-cpt' ); ?> <strong><?php esc_html_e( 'reset', 'wp-divi-rename-project-cpt' ); ?></strong> <?php esc_html_e( 'this custom post type to the default Divi Project settings (1) navigate to', 'wp-divi-rename-project-cpt' ); ?> <a href="<?php echo esc_url( admin_url( 'plugins.php' ) ); ?>"><?php esc_html_e( 'Plugins', 'wp-divi-rename-project-cpt' ); ?></a> <?php esc_html_e( 'and deactivate the', 'wp-divi-rename-project-cpt' ); ?> <strong><?php esc_html_e( 'Rename Divi Projects post type', 'wp-divi-rename-project-cpt' ); ?></strong> <?php esc_html_e( 'plugin then (2) go to', 'wp-divi-rename-project-cpt' ); ?> <a href="options-permalink.php" target="_blank"><?php esc_html_e( 'Settings &gt; Permalinks', 'wp-divi-rename-project-cpt' ); ?></a> <?php esc_html_e( 'and click the Save Changes button to flush the rewrite rules cache.', 'wp-divi-rename-project-cpt' ); ?></p>
+        <h2><?php esc_html_e( 'How to Reset to Default Values', 'wp-divi-rename-project-cpt' ); ?></h2>
+        <p class="reset" style="font-size: 14px;"><?php esc_html_e( 'To', 'wp-divi-rename-project-cpt' ); ?> <strong><?php esc_html_e( 'reset', 'wp-divi-rename-project-cpt' ); ?></strong> <?php esc_html_e( 'this custom post type to the default Divi Project settings (1) navigate to', 'wp-divi-rename-project-cpt' ); ?> <a href="<?php echo esc_url( admin_url( 'plugins.php' ) ); ?>"><?php esc_html_e( 'Plugins', 'wp-divi-rename-project-cpt' ); ?></a> <?php esc_html_e( 'and deactivate the', 'wp-divi-rename-project-cpt' ); ?> <strong><?php esc_html_e( 'Rename Divi Projects post type', 'wp-divi-rename-project-cpt' ); ?></strong> <?php esc_html_e( 'plugin then (2) go to', 'wp-divi-rename-project-cpt' ); ?> <a href="options-permalink.php" target="_blank"><?php esc_html_e( 'Settings &gt; Permalinks', 'wp-divi-rename-project-cpt' ); ?></a> <?php esc_html_e( 'and click the Save Changes button to flush the rewrite rules cache.', 'wp-divi-rename-project-cpt' ); ?></p>
     </form>
     <?php
 }
