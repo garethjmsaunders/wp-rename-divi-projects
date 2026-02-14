@@ -1,7 +1,7 @@
 <?php
 /*
  * Plugin Name:         Rename Divi Projects
- * Version:             2.0.999.8
+ * Version:             2.0.999.9
  * Plugin URI:          https://digitalshed45.co.uk/rename-divi-projects-plugin/
  * Description:         Requires Divi by Elegant Themes. Rename the Divi 'Projects' post type to a user-defined name.
  * Author:              Digital Shed45 - Gareth J M Saunders
@@ -103,7 +103,12 @@ add_action( 'init', 'wpdocs_load_textdomain' );
  */
 function divi_projects_cpt_rename_enqueue_custom_admin_assets( $hook_suffix ) {
 
-    if ( 'settings_page_rename-divi-projects-settings' !== $hook_suffix ) {
+    $plugin_page_suffix = '_page_rename-divi-projects-settings';
+
+    if (
+        'settings_page_rename-divi-projects-settings' !== $hook_suffix &&
+        substr( $hook_suffix, -strlen( $plugin_page_suffix ) ) !== $plugin_page_suffix
+    ) {
         return;
     }
 
@@ -122,25 +127,68 @@ add_action( 'admin_enqueue_scripts', 'divi_projects_cpt_rename_enqueue_custom_ad
 
 /**
  * Admin settings menu item
- * Add a submenu item to the WordPress admin settings menu for plugin settings.
+ * Add a submenu item for plugin settings in site admin.
  *
- * This function creates an admin menu item under the "Settings" menu in the WordPress
- * admin area, allowing users to access the Rename Divi Projects settings page.
+ * Prefers placing the submenu under Divi when available. Falls back to
+ * the Settings menu if a Divi parent slug is not present.
  *
  * @return void
  */
 function divi_projects_cpt_rename_add_admin_menu() {
-    add_options_page(
+    // Keep settings in site admin only; options are site-specific.
+    if ( is_network_admin() ) {
+        return;
+    }
+
+    $parent_slug = divi_projects_cpt_rename_get_divi_parent_menu_slug();
+
+    if ( empty( $parent_slug ) ) {
+        $parent_slug = 'options-general.php';
+    }
+
+    add_submenu_page(
+        $parent_slug,                           // $parent_slug (string)
         __( 'Rename Divi Projects Settings', 'wp-divi-rename-project-cpt' ),   // $page_title (string)
         __( 'Rename Divi Projects', 'wp-divi-rename-project-cpt' ),            // $menu_title (string)
         'manage_options',                        // $capability (string)
         'rename-divi-projects-settings',         // $menu_slug (string)
-        'divi_projects_cpt_rename_options_page', // $callback_function (callable)
-        null                                     // $position (int|float)
+        'divi_projects_cpt_rename_options_page'  // $callback_function (callable)
     );
 }
-// Hook the function to the 'admin_menu' action to register the submenu item.
-add_action( 'admin_menu', 'divi_projects_cpt_rename_add_admin_menu' );
+// Hook late so Divi has registered its menu first.
+add_action( 'admin_menu', 'divi_projects_cpt_rename_add_admin_menu', 99 );
+
+/**
+ * Get the Divi top-level parent menu slug when available.
+ *
+ * @return string Menu slug or empty string if not found.
+ */
+function divi_projects_cpt_rename_get_divi_parent_menu_slug() {
+    global $menu;
+
+    if ( ! is_array( $menu ) ) {
+        return '';
+    }
+
+    // Known Divi parent slug first, then title-based fallback.
+    foreach ( $menu as $item ) {
+        if ( isset( $item[2] ) && 'et_divi_options' === $item[2] ) {
+            return $item[2];
+        }
+    }
+
+    foreach ( $menu as $item ) {
+        if ( ! isset( $item[0], $item[2] ) ) {
+            continue;
+        }
+
+        if ( false !== stripos( wp_strip_all_tags( $item[0] ), 'Divi' ) ) {
+            return $item[2];
+        }
+    }
+
+    return '';
+}
 
 
 /**
